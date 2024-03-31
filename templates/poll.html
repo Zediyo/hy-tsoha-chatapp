@@ -1,0 +1,12 @@
+{{ topic }}
+<hr>
+<form action="/answer" method="POST">
+{% for choice in choices %}
+<input type="radio" name="answer" value="{{ choice.id }}"> {{ choice.choice }} <br>
+{% endfor %}
+<p>
+<input type="submit" value="Lähetä">
+<input type="hidden" name="id" value="{{ id }}">
+</form>
+<hr>
+<a href="/">Takaisin</a>

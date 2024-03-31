@@ -1,0 +1,22 @@
+<a href="/new">Uusi kysely</a>
+<hr>
+{% for poll in polls %}
+Aihe: {{ poll.topic }} <br>
+Luotu: {{ poll.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
+<a href="/poll/{{ poll.id }}">Mene kyselyyn</a> |
+<a href="/result/{{ poll.id }}">Näytä tulokset</a> <br>
+<hr>
+{% endfor %}
+
+{% if session.username %}
+<p>Olet kirjautunut nimellä {{ session.username }}</p>
+<a href="/logout">Kirjaudu ulos</a>
+{% else %}
+<form action="/login" method="POST">
+<p>Tunnus:<br>
+<input type="text" name="username"></p>
+<p>Salasana:<br>
+<input type="password" name="password"></p>
+<input type="submit" value="Kirjaudu">
+</form>
+{% endif %}
