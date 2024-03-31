@@ -12,16 +12,8 @@ Features:
 * Users can delete their own account, admins can delete any account.
 
 
-$ git clone https://github.com/user/tsoha-visitors.git
-Cloning into 'tsoha-visitors'...
-remote: Enumerating objects: 3, done.
-remote: Counting objects: 100% (3/3), done.
-remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
-Unpacking objects: 100% (3/3), done.
-$ cd tsoha-visitors/
-$ python3 -m venv venv
-$ source venv/bin/activate
-(venv) $ pip install flask
-(venv) $ pip install flask-sqlalchemy
-(venv) $ pip install psycopg2
-(venv) $ pip install python-dotenv
+python -m venv venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
