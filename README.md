@@ -17,3 +17,8 @@ python -m venv venv
 source venv/bin/activate
 
 pip install -r requirements.txt
+
+psql < schema.sql
+
+DATABASE_URL=<db_url>
+SECRET_KEY=<key>

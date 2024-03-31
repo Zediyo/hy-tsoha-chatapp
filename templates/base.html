@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title> Chat App </title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+	<header>
+		{% if session.username %}
+		<div class="container">
+			<p>
+				Logged in as 
+				{%if session.admin %} admin:
+				{% else %} user:
+				{% endif %}{{ session.username }}
+			</p>
+			<form action="/logout">
+				<input type="submit" value="Log Out" />
+			</form>
+		</div>
+		<hr>
+		{% endif %}
+	</header>
+
+	{% block content %}{% endblock %}
+
+	<footer>
+		<hr>
+		<p>Potato</p>
+	</footer>
+</body>
+</html>

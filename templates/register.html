@@ -1,0 +1,43 @@
+<a href="/">Return</a>
+
+<p>{{ errmsg }}</p>
+<form action="/register" method="POST" onsubmit="return check(this)">
+	<p>Username:<br>
+	<input type="text" name="username"></p>
+	<p>Password:<br>
+		<input type="password" name="password1"></p>
+	<p>Repeat Password:<br>
+	<input type="password" name="password2"></p>
+	<input type="submit" value="Create User">
+</form>
+
+<script>
+	function check(form)
+	{
+		if ( form.username.value.length < 2 || form.username.value.length > 32 )
+		{
+			alert("Username has to be between 2 and 32 characters long.");
+			return false;
+		}
+
+		if ( !form.username.value.match(/^[0-9a-z]+$/) )
+		{
+			alert("Username can only contain numbers or letters.");
+			return false;
+		}
+
+		if ( form.password1.value.length < 6 || form.password1.value.length > 32 )
+		{
+			alert("Password length has to be between 6 and 32.");
+			return false;
+		}
+
+		if ( form.password1.value != form.password2.value )
+		{
+			alert("Passwords do not match.");
+			return false;
+		}
+
+		return true;
+	}
+</script>

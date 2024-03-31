@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+
+	{{ errmsg }}
+
+	{% if user %}
+		<h3>Page of {{ user.username }}</h3>
+	{% endif %}	
+
+{% endblock %}

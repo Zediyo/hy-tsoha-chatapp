@@ -1,0 +1,12 @@
+<a href="/register">Create new user</a>
+
+<p>{{ errmsg }}</p>
+
+<form action="/login" method="POST">
+	<p>Username:<br>
+	<input type="text" name="username"></p>
+	<p>Password:<br>
+	<input type="password" name="password"></p>
+	<input type="submit" value="Login">
+	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
