@@ -5,11 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 @app.route("/")
 def index():
-	if "user_id" not in session:
-		return redirect("/login")
-
-	return redirect("/user/" + str(session["user_id"]))
-	#return render_template("index.html")
+	return render_template("index.html")
 
 @app.errorhandler(404)
 def no_page(e):
@@ -106,6 +102,8 @@ def login():
 		if q.is_user_admin(user.id):
 			session["admin"] = True
 
+		return redirect("/user/" + str(session["user_id"]))
+
 	return redirect("/")
 
 @app.route("/register",methods=["GET", "POST"])
@@ -145,6 +143,8 @@ def register():
 		user = q.get_user(username)
 		session["user_id"] = user.id
 		session["username"] = username
+
+		return redirect("/user/" + str(session["user_id"]))
 
 	return redirect("/")
 

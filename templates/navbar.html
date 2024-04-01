@@ -1,0 +1,28 @@
+<!-- navbar.html -->
+<header>
+	<nav class="navbar bgcdg">
+		<div class="container-fluid">
+			<a class="navbar-brand mb-0 h1 co co-h" href="/">Chat App</a>
+			{% if session.username %}
+			<div class="d-flex">
+				<div class="badge text-wrap fw-light co" style="background-color: inherit; margin-right: 1rem;">
+					Logged in as 
+					{%if session.admin %} admin:
+					{% else %} user:
+					{% endif %}{{ session.username }}
+				</div>
+				<div>
+					<a class="btn btn-sm btn-outline-secondary co bco" href="/user/{{ session['user_id'] }}" role="button">My Page</a>
+					<a class="btn btn-sm btn-outline-secondary co bco" href="/logout" role="button">Log Out</a>
+				</div>
+			</div>
+			{% else %}
+			<div>
+				<a class="btn btn-sm btn-outline-secondary co bco" href="/login" role="button">Sign In</a>
+				<a class="btn btn-sm btn-outline-secondary co bco" href="/register" role="button">Create New User</a>
+			</div>
+			{% endif %}
+		</div>
+	</nav>
+</header>
+

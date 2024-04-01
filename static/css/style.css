@@ -1,0 +1,44 @@
+.btn-primary {
+    background-color: #ff0000; /* Red */
+    border-color: #ff0000;
+}
+
+.btn-secondary {
+    background-color: #00ff00; /* Green */
+    border-color: #00ff00;
+}
+
+.bgcg
+{
+	background-color: #303030;
+}
+
+.bgcdg
+{
+	background-color: #212121;
+}
+
+.bgclg
+{
+	background-color: #424242;
+}
+
+.co
+{
+	color: #fb8c00;
+}
+
+.co-h:hover
+{
+	color: #fb8c00;
+}
+
+.bco
+{
+	border-color: #fb8c00;
+}
+
+.bco-h:hover
+{
+	border-color: #fb8c00;
+}
