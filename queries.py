@@ -35,3 +35,8 @@ def add_new_user(username, hash):
 		return False
 	
 	return True
+
+def get_all_users():
+	query = text("SELECT id, username, b.user_id st FROM users a LEFT JOIN (SELECT user_id FROM admins) b ON a.id = b.user_id")
+	result = db.session.execute(query)
+	return result.fetchall()

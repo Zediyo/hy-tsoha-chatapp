@@ -11,9 +11,11 @@ def index():
 def no_page(e):
     return redirect("/")
 
-@app.route("/new")
-def new():
-    return render_template("new.html")
+@app.route("/users")
+def users():
+	users = q.get_all_users()
+	print(users)
+	return render_template("userlist.html", users=users)
 
 @app.route("/create", methods=["POST"])
 def create():

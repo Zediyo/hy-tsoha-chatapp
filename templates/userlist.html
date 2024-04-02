@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4 class="co">All Users</h4>
+<table class="table table-dark table-striped table-sm">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Username</th>
+			<th scope="col">Admin</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for user in users %}
+		<tr>
+			<th scope="row">{{ user.id }}</th>
+			<td>
+				<a class="nav-link col text-nowrap" href="/user/{{ user.id }}">{{ user.username }}</a>
+			</td>
+			{% if user.st %}
+			<td>+</td>
+			{% else %}
+			<td></td>
+			{% endif %}
+			{% if user.id == 1 %}
+			<td>
+				<a class="btn btn-outline-secondary co bco" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Add Friend</a>
+			</td>
+			{% elif user.id == 2 %}
+			<td>
+				<a class="btn btn-outline-secondary co bco disabled" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Request Sent</a>
+			</td>
+			{% else %}
+			<td>
+				<a class="btn btn-outline-secondary co bco" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Message</a>
+			</td>
+			{% endif %}
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<hr>
+	<ul>
+	{% for user in users %}
+		<li> {{ user.id }}: {{ user.username }}</li>
+	{% endfor %}
+	</ul>
+<hr>
+<a href="/">Takaisin</a>
+
+{% endblock %}

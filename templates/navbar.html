@@ -1,8 +1,16 @@
 <!-- navbar.html -->
 <header>
-	<nav class="navbar bgcdg">
+	<nav class="navbar bgcdga">
 		<div class="container-fluid">
 			<a class="navbar-brand mb-0 h1 co co-h" href="/">Chat App</a>
+
+				<div class="row align-items-start">
+					<a class="nav-link col co text-nowrap co-h" href="/users" style="padding-right: 8px;">All Users</a>
+				</div>
+
+				
+
+
 			{% if session.username %}
 			<div class="d-flex">
 				<div class="badge text-wrap fw-light co" style="background-color: inherit; margin-right: 1rem;">
