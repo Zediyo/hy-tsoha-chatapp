@@ -4,23 +4,25 @@
 		<div class="container-fluid">
 			<a class="navbar-brand mb-0 h1 co co-h" href="/">Chat App</a>
 
-				<div class="row align-items-start">
-					<a class="nav-link col co text-nowrap co-h" href="/users" style="padding-right: 8px;">All Users</a>
+				<div class="row align-items-start" style="flex-grow: 100;">
+					<a class="nav-link col-2 co text-nowrap co-h" href="/users" style="margin-top: 0.2rem; padding-left: 4rem;">All Users</a>
+					{% if session.user %}
+					<a class="nav-link col-2 co text-nowrap co-h" href="/user/{{ session.user.id }}" style="margin-top: 0.2rem; padding-left: 2rem;">My Page</a>
+					{% endif %}
 				</div>
 
 				
 
 
-			{% if session.username %}
+			{% if session.user %}
 			<div class="d-flex">
 				<div class="badge text-wrap fw-light co" style="background-color: inherit; margin-right: 1rem;">
 					Logged in as 
-					{%if session.admin %} admin:
+					{%if session.user.admin %} admin:
 					{% else %} user:
-					{% endif %}{{ session.username }}
+					{% endif %}{{ session.user.username }}
 				</div>
 				<div>
-					<a class="btn btn-sm btn-outline-secondary co bco" href="/user/{{ session['user_id'] }}" role="button">My Page</a>
 					<a class="btn btn-sm btn-outline-secondary co bco" href="/logout" role="button">Log Out</a>
 				</div>
 			</div>

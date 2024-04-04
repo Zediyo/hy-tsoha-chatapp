@@ -37,6 +37,43 @@ def add_new_user(username, hash):
 	return True
 
 def get_all_users():
-	query = text("SELECT id, username, b.user_id st FROM users a LEFT JOIN (SELECT user_id FROM admins) b ON a.id = b.user_id")
+	query = text("""
+			  SELECT id, username, b.user_id st, TO_CHAR(created_at, 'DD-MM-YYYY') date FROM users a
+			  LEFT JOIN (SELECT user_id FROM admins) b ON a.id = b.user_id
+			  ORDER BY id
+		""")
 	result = db.session.execute(query)
 	return result.fetchall()
+
+def send_friend_request(id1, id2):
+	try:
+		query = text("INSERT INTO friend_requests (sender_id, receiver_id) VALUES (:id1, :id2)")
+		db.session.execute(query, {"id1" : id1, "id2" : id2})
+		db.session.commit()
+	except:
+		return False
+
+	return True
+
+def get_sent_friend_requests(id):
+	query = text("SELECT receiver_id FROM friend_requests WHERE sender_id=:id")
+	result = db.session.execute(query, {"id" : id})
+	return result.fetchall()
+
+def get_friends(id):
+	query = text("""
+			SELECT user1_id FROM contact_pairs WHERE user2_id=:id 
+			UNION 
+			SELECT user2_id FROM contact_pairs WHERE user1_id=:id 
+		""")
+	result = db.session.execute(query, {"id" : id})
+	return result.fetchall()
+
+def is_friends_with(id1, id2):
+	query = text("""
+			SELECT 1 FROM contact_pairs WHERE user1_id=:id1 AND user2_id=:id2 
+			UNION 
+			SELECT 1 FROM contact_pairs WHERE user1_id=:id2 AND user2_id=:id1 
+		""")
+	result = db.session.execute(query, {"id1" : id1, "id2" : id2})
+	return result.fetchone() != None

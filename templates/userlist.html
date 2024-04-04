@@ -7,6 +7,7 @@
 		<tr>
 			<th scope="col">#</th>
 			<th scope="col">Username</th>
+			<th scope="col">Joined</th>
 			<th scope="col">Admin</th>
 			<th scope="col"></th>
 		</tr>
@@ -15,31 +16,67 @@
 		{% for user in users %}
 		<tr>
 			<th scope="row">{{ user.id }}</th>
+
+			{% if session.admin %}
 			<td>
 				<a class="nav-link col text-nowrap" href="/user/{{ user.id }}">{{ user.username }}</a>
 			</td>
+			{% else %}
+			<td>
+				{{ user.username }}
+			</td>
+			{% endif %}
+
+			<td>
+				{{ user.date }}
+			</td>
+
 			{% if user.st %}
 			<td>+</td>
 			{% else %}
 			<td></td>
 			{% endif %}
-			{% if user.id == 1 %}
-			<td>
-				<a class="btn btn-outline-secondary co bco" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Add Friend</a>
-			</td>
-			{% elif user.id == 2 %}
-			<td>
-				<a class="btn btn-outline-secondary co bco disabled" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Request Sent</a>
-			</td>
+
+			{% if session.user and session.user.id != user.id %}
+				{% if user.id in friends %}
+				<td>
+					<a class="btn btn-outline-secondary co bco" href="/logout" role="button"
+						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+					>Message</a>
+				</td>
+				{% elif user.id in friend_requests %}
+				<td>
+					<a class="btn btn-outline-secondary co bco disabled" href="/logout" role="button"
+						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+					>Request Sent</a>
+				</td>
+				{% else %}
+				<td>
+					<form action="/friendrequest" method="POST">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+						<input type="hidden" name="target_id" value="{{ user.id }}"/>
+						<button class="btn btn-outline-secondary co bco" type="submit"
+							style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+						>Add Friend</a>
+					</form>
+				</td>
+				{% endif %}
 			{% else %}
-			<td>
-				<a class="btn btn-outline-secondary co bco" href="/logout" role="button" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;">Message</a>
-			</td>
+				<td></td>
 			{% endif %}
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
+
+<form action="/request" method="POST">
+	<p>Username:<br>
+	<input type="text" name="username"></p>
+	<p>Password:<br>
+	<input type="password" name="password"></p>
+	<input type="submit" value="Login">
+	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+</form>
 <hr>
 	<ul>
 	{% for user in users %}

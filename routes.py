@@ -3,8 +3,17 @@ from flask import flash, redirect, render_template, request, session
 import queries as q
 from werkzeug.security import check_password_hash, generate_password_hash
 
+def create_user_data(id, name):
+	session["user"] = {
+		"id" : id,
+		"username" : name,
+		"admin" : False,
+	}
+
 @app.route("/")
 def index():
+	if "user" in session:
+		print(session["user"])
 	return render_template("index.html")
 
 @app.errorhandler(404)
@@ -14,8 +23,20 @@ def no_page(e):
 @app.route("/users")
 def users():
 	users = q.get_all_users()
-	print(users)
-	return render_template("userlist.html", users=users)
+
+	friend_requests = []
+	friends = []
+
+	if "user" in session:
+		friend_requests = q.get_sent_friend_requests(session["user"]["id"])
+		friend_requests = [item[0] for item in friend_requests]
+
+		friends = q.get_friends(session["user"]["id"])
+		friends = [item[0] for item in friends]
+
+		print("AAA", friend_requests, friends)
+
+	return render_template("userlist.html", users=users, friend_requests=friend_requests, friends=friends)
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -80,10 +101,10 @@ def result(id):
 
 @app.route("/login",methods=["GET", "POST"])
 def login():
-	if request.method == "GET":
-		if "user_id" in session:
-			return redirect("/")
+	if "user" in session:
+		return redirect("/")
 
+	if request.method == "GET":
 		return render_template("login.html")
      
 	if request.method == "POST":
@@ -97,22 +118,22 @@ def login():
             
 		if check_password_hash(user.password, password) == False:
 			return render_template("login.html", errmsg="Invalid password.")
-            
-		session["user_id"] = user.id
-		session["username"] = username
+        
+		create_user_data(user.id, username)
 
 		if q.is_user_admin(user.id):
-			session["admin"] = True
+			session["user"]["admin"] = True
 
-		return redirect("/user/" + str(session["user_id"]))
+		return redirect("/user/" + str(session["user"]["id"]))
 
 	return redirect("/")
 
 @app.route("/register",methods=["GET", "POST"])
 def register():
+	if "user" in session:
+		return redirect("/")
+
 	if request.method == "GET":
-		if "user_id" in session:
-			return redirect("/")
 		return render_template("register.html")
      
 	if request.method == "POST":
@@ -143,26 +164,25 @@ def register():
 			return render_template("register.html", errmsg="Unknown error.")
 
 		user = q.get_user(username)
-		session["user_id"] = user.id
-		session["username"] = username
+		create_user_data(user.id, username)
 
-		return redirect("/user/" + str(session["user_id"]))
+		return redirect("/user/" + str(session["user"]["id"]))
 
 	return redirect("/")
 
 @app.route("/logout")
 def logout():
-	session.pop("user_id", None)
-	session.pop("username", None)
-	session.pop("admin", None)
+	session.pop("user", None)
 	return redirect("/")
 
 @app.route("/user/<int:id>")
 def user_page(id):
-	cur_id = session.get("user_id", -1)
-	is_admin = session.get("admin", False)
+	user = session.get("user", None)
 
-	if cur_id == -1 or ( cur_id != id and is_admin == False ):
+	if not user:
+		return render_template("profile.html", errmsg="No access.")
+
+	if user["id"]!= id and user["admin"] == False:
 		return render_template("profile.html", errmsg="No access.")
 
 	username = q.get_username_from_id(id)
@@ -173,6 +193,26 @@ def user_page(id):
 	user = {"username" : username}
 
 	return render_template("profile.html", user=user)
+
+@app.route("/friendrequest",methods=["POST"])
+def friendrequest():
+	if "user" not in session:
+		return redirect("/")
+
+	target_id = request.form["target_id"]
+
+	if session["user"]["id"] == target_id:
+		return redirect("/")
+	
+	if not q.get_username_from_id(target_id):
+		return redirect("/")
+	
+	if q.is_friends_with(session["user"]["id"], target_id):
+		return redirect("/")
+
+	q.send_friend_request(session["user"]["id"], target_id)
+
+	return redirect(request.referrer)
 
 # @app.route("/result")
 # def result():
