@@ -69,21 +69,4 @@
 	</tbody>
 </table>
 
-<form action="/request" method="POST">
-	<p>Username:<br>
-	<input type="text" name="username"></p>
-	<p>Password:<br>
-	<input type="password" name="password"></p>
-	<input type="submit" value="Login">
-	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-</form>
-<hr>
-	<ul>
-	{% for user in users %}
-		<li> {{ user.id }}: {{ user.username }}</li>
-	{% endfor %}
-	</ul>
-<hr>
-<a href="/">Takaisin</a>
-
 {% endblock %}
