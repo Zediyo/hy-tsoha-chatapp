@@ -18,10 +18,41 @@ CREATE TABLE messages (
     receiver_id INTEGER REFERENCES users(id),
     content TEXT,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	edit_at TIMESTAMP
+	edit_at TIMESTAMP DEFAULT NULL
 );
 
 INSERT INTO users (username, password) VALUES ('test_admin', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
-INSERT INTO admins (user_id) VALUES (1);
 INSERT INTO users (username, password) VALUES ('test_user', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
-INSERT INTO contact_pairs (user1_id, user2_id) VALUES (1, 2)
+INSERT INTO users (username, password) VALUES ('potato01', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato02', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato03', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato04', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato05', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato06', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato07', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato08', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato09', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato10', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato11', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+INSERT INTO users (username, password) VALUES ('potato12', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
+
+INSERT INTO admins (user_id) VALUES (1);
+INSERT INTO admins (user_id) VALUES (4);
+INSERT INTO admins (user_id) VALUES (7);
+
+INSERT INTO contact_pairs (user1_id, user2_id) VALUES (1, 2);
+INSERT INTO contact_pairs (user1_id, user2_id) VALUES (3, 1);
+
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (1, 4);
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (1, 5);
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (1, 6);
+
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (7, 1);
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (8, 1);
+INSERT INTO friend_requests (sender_id, receiver_id) VALUES (9, 1);
+
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 2, 'potato');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (2, 1, 'potato');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 2, 'peruna');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (3, 1, 'potato potato potato potato potato potato potato');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 4, 'potato');
