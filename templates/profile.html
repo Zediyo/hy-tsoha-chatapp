@@ -4,132 +4,179 @@
 	{{ errmsg }}
 
 	{% if user %}
-		<h4 class="co">Page of {{ user.username }}</h4>
+		<div style="white-space: nowrap;">
+			<h4 class="co" style="display: inline-block; margin-right: 1rem;">Page of {{ user.username }}</h4>
+			{% if session.user.admin %}
+			<a class="btn btn-outline-danger" href="/logout" role="button"
+				style="--bs-btn-padding-y: 0.1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem; margin-bottom: 4px;"
+			>Delete User Account</a>
+			{% endif %}
+		</div>
 
 		<div class="container">
 			<div class="row">
-				<div class="col">
-					<h5 class="co">Friends</h5>
-					<table class="table table-dark table-striped table-sm">
-						{% if friends %}
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for friend in friends %}
-							<tr>
-								<th scope="row">friend.id</th>
-								<td>
-									{{ friend.username }}
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-						{% else %}
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col">Friend list is empty.</th>
-							</tr>
-						</thead>
-						{% endif %}
-					</table>
+				<div class="col me-3">
+					<div class="row">
+						<h5 class="co">Friends</h5>
+						<table class="table table-dark table-striped table-sm">
+							{% if friends %}
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Username</th>
+									<th scope="col"></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for friend in friends %}
+								<tr>
+									<th scope="row" class="text-right">{{ friend.id }}</th>
+									<td>
+										{{ friend.username }}
+									</td>
+									<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+										<a class="btn btn-outline-secondary co bco" href="/logout" role="button"
+											style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+										>Message</a>
+										<a class="btn btn-outline-danger" href="/logout" role="button"
+											style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+										>Remove Friend</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% else %}
+							<thead>
+								<tr>
+									<th scope="col"></th>
+									<th scope="col">Friend list is empty.</th>
+								</tr>
+							</thead>
+							{% endif %}
+						</table>
+					</div>
+					<div class="row">
+						<div class="col-7 ps-0" style="white-space: nowrap;">
+							<h5 class="co">Received Requests</h5>
+							<table class="table table-dark table-striped table-sm">
+								{% if received_requests %}
+								<thead>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Username</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for req in received_requests %}
+									<tr>
+										<th scope="row">{{ req.id }}</th>
+										<td>
+											{{ req.username }}
+										</td>
+										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+											<a class="btn btn-outline-success" href="/logout" role="button"
+												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+											>Accept</a>
+											<a class="btn btn-outline-danger" href="/logout" role="button"
+												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+											>Decline</a>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+								{% else %}
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">No received requests.</th>
+									</tr>
+								</thead>
+								{% endif %}
+							</table>
+						</div>
+						<div class="w-100 d-md-none"></div>
+						<div class="col-5 pe-0 ps-0" style="white-space: nowrap;">
+							<h5 class="co">Sent Requests</h5>
+							<table class="table table-dark table-striped table-sm">
+								{% if sent_requests %}
+								<thead>
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Username</th>
+										<th scope="col"></th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for req in sent_requests %}
+									<tr>
+										<th scope="row">{{ req.id }}</th>
+										<td>
+											{{ req.username }}
+										</td>
+										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+											<a class="btn btn-outline-secondary" href="/logout" role="button"
+												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+											>Cancel</a>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+								{% else %}
+								<thead>
+									<tr>
+										<th scope="col"></th>
+										<th scope="col">No sent requests.</th>
+									</tr>
+								</thead>
+								{% endif %}
+							</table>
+						</div>
+					</div>
 				</div>
 				<div class="col">
-					<h5 class="co">Recently Messaged</h5>
-					<table class="table table-dark table-striped table-sm">
-						{% if recents %}
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for recent in recents %}
-							<tr>
-								<th scope="row">friend.id</th>
-								<td>
-									{{ friend.username }}
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-						{% else %}
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col">No recent messages.</th>
-							</tr>
-						</thead>
-						{% endif %}
-					</table>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col">
-					<h5 class="co">Received Requests</h5>
-					<table class="table table-dark table-striped table-sm">
-						{% if received_requests %}
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for req in received_requests %}
-							<tr>
-								<th scope="row">friend.id</th>
-								<td>
-									{{ friend.username }}
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-						{% else %}
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col">No received requests.</th>
-							</tr>
-						</thead>
-						{% endif %}
-					</table>
-				</div>
-				<div class="col">
-					<h5 class="co">Sent Requests</h5>
-					<table class="table table-dark table-striped table-sm">
-						{% if sent_requests %}
-						<thead>
-							<tr>
-								<th scope="col">#</th>
-								<th scope="col">Username</th>
-							</tr>
-						</thead>
-						<tbody>
-							{% for req in sent_requests %}
-							<tr>
-								<th scope="row">friend.id</th>
-								<td>
-									{{ friend.username }}
-								</td>
-							</tr>
-							{% endfor %}
-						</tbody>
-						{% else %}
-						<thead>
-							<tr>
-								<th scope="col"></th>
-								<th scope="col">No sent requests.</th>
-							</tr>
-						</thead>
-						{% endif %}
-					</table>
+					<div class="row">
+						<h5 class="co">Recently Messaged</h5>
+						<table class="table table-dark table-striped table-sm">
+							{% if recents %}
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Username</th>
+									<th scope="col">Message</th>
+									<th scope="col">Date</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for recent in recents %}
+								<a href="/">
+									<tr>
+										<th scope="row">{{ recent.other_id }}</th>
+										<td>
+											{{ recent.other_name }}
+										</td>
+										<td>
+											<p class="fw-lighter lh-1">
+												{{ recent.sender_name }}: {{ recent.content }}
+											</p>
+										</td>
+										<td>
+											{{ recent.date }}
+										</td>
+									</tr>
+								</a>
+								{% endfor %}
+							</tbody>
+							{% else %}
+							<thead>
+								<tr>
+									<th scope="col"></th>
+									<th scope="col">No recent messages.</th>
+								</tr>
+							</thead>
+							{% endif %}
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

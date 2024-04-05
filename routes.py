@@ -190,9 +190,17 @@ def user_page(id):
 	if not username:
 		return render_template("profile.html", errmsg="User does not exist.")
 
-	user = {"username" : username}
+	user = {"id" : id, "username" : username}
+	friends = q.get_friends(id)
+	recents = q.get_recently_messaged_with(id)
+	sent_requests = q.get_sent_friend_requests(id)
+	received_requests = q.get_received_friend_requests(id)
 
-	return render_template("profile.html", user=user)
+	print(recents)
+
+	return render_template("profile.html", user=user, friends=friends
+		, recents=recents, sent_requests=sent_requests, received_requests=received_requests)
+
 
 @app.route("/friendrequest",methods=["POST"])
 def friendrequest():
