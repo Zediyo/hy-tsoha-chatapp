@@ -106,7 +106,7 @@ def get_recently_messaged_with(id):
 					CASE WHEN sender_id = :id THEN receiver_id ELSE sender_id END AS other_id,
 					sender_id,
 					b.username as sender_name,
-					TO_CHAR(sent_at, 'MM:HH DD/MM/YYYY') AS date,
+					TO_CHAR(sent_at, 'HH24:MI DD/MM/YY') AS date,
 					content,
 					ROW_NUMBER() OVER(PARTITION BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id) ORDER BY a.id DESC) rn
 				FROM messages a
@@ -114,6 +114,7 @@ def get_recently_messaged_with(id):
 			) a
 			LEFT JOIN users b ON a.other_id = b.id
 			WHERE rn = 1
+			LIMIT 10;
 		""")
 	result = db.session.execute(query, {"id" : id})
 	return result.fetchall()
