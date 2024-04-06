@@ -1,72 +1,72 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container-sm bgclg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;">
-<h4 class="co">All Users</h4>
-<table class="table table-dark table-striped table-sm">
-	<thead>
-		<tr>
-			<th scope="col">#</th>
-			<th scope="col">Username</th>
-			<th scope="col">Joined</th>
-			<th scope="col">Admin</th>
-			<th scope="col"></th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for user in users %}
-		<tr>
-			<th scope="row">{{ user.id }}</th>
+	<h4 class="co">All Users</h4>
+	<table class="table table-dark table-striped table-sm">
+		<thead>
+			<tr>
+				<th scope="col">#</th>
+				<th scope="col">Username</th>
+				<th scope="col">Joined</th>
+				<th scope="col">Admin</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+			<tr>
+				<th scope="row">{{ user.id }}</th>
 
-			{% if session.user.admin %}
-			<td>
-				<a class="nav-link col text-nowrap" href="/user/{{ user.id }}">{{ user.username }}</a>
-			</td>
-			{% else %}
-			<td>
-				{{ user.username }}
-			</td>
-			{% endif %}
-
-			<td>
-				{{ user.date }}
-			</td>
-
-			{% if user.st %}
-			<td>+</td>
-			{% else %}
-			<td></td>
-			{% endif %}
-
-			{% if session.user and session.user.id != user.id %}
-				{% if user.id in friends %}
+				{% if session.user and session.user.admin %}
 				<td>
-					<a class="btn btn-outline-secondary co bco" href="/user/{{ session.user.id }}/message/{{ user.id }}" role="button"
-						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-					>Message</a>
-				</td>
-				{% elif user.id in friend_requests %}
-				<td>
-					<a class="btn btn-outline-secondary co bco disabled" href="/" role="button"
-						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-					>Request Sent</a>
+					<a class="nav-link col text-nowrap" href="/user/{{ user.id }}">{{ user.username }}</a>
 				</td>
 				{% else %}
 				<td>
-					<form action="/friendrequest" method="POST">
-						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-						<input type="hidden" name="target_id" value="{{ user.id }}"/>
-						<button class="btn btn-outline-secondary co bco" type="submit"
-							style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-						>Add Friend</button>
-					</form>
+					{{ user.username }}
 				</td>
 				{% endif %}
-			{% else %}
+
+				<td>
+					{{ user.date }}
+				</td>
+
+				{% if user.st %}
+				<td>+</td>
+				{% else %}
 				<td></td>
-			{% endif %}
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+				{% endif %}
+
+				{% if session.user and session.user.id != user.id %}
+					{% if user.id in friends %}
+					<td>
+						<a class="btn btn-outline-secondary co bco" href="/user/{{ session.user.id }}/message/{{ user.id }}" role="button"
+							style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+						>Message</a>
+					</td>
+					{% elif user.id in friend_requests %}
+					<td>
+						<a class="btn btn-outline-secondary co bco disabled" href="/" role="button"
+							style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+						>Request Sent</a>
+					</td>
+					{% else %}
+					<td>
+						<form action="/friendrequest" method="POST">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+							<input type="hidden" name="target_id" value="{{ user.id }}"/>
+							<button class="btn btn-outline-secondary co bco" type="submit"
+								style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+							>Add Friend</button>
+						</form>
+					</td>
+					{% endif %}
+				{% else %}
+					<td></td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 </div>
 {% endblock %}
