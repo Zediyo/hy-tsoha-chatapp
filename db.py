@@ -8,8 +8,8 @@ def create_tables_if_missing():
 	result = db.session.execute(text("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'admins');"))
 
 	if result.fetchone()[0] == False:
-		schema_file = 'schema.sql'
-		with open(schema_file, 'r') as file:
+		schema_file = "schema.sql"
+		with open(schema_file, "r") as file:
 			schema_sql = file.read()
 			print("Creating tables...")
 			db.session.execute(text(schema_sql))

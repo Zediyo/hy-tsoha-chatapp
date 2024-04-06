@@ -10,7 +10,7 @@
 	{% if user %}
 		<div style="white-space: nowrap;">
 			<h4 class="co mb-3" style="display: inline-block; margin-right: 1rem;">Page of {{ user.username }}</h4>
-			{% if session.user.admin or session.user.id == user.id %}
+			{% if session.user.id == user.id or ( session.user.admin and not user.admin ) %}
 			<a class="btn btn-outline-danger" href="/logout" role="button"
 				style="--bs-btn-padding-y: 0.1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem; margin-bottom: 4px;"
 			>Delete User Account</a>

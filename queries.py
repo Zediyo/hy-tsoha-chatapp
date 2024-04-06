@@ -29,9 +29,9 @@ def add_new_user(username, hash):
 
 def get_all_users():
 	query = text("""
-			  SELECT id, username, b.user_id st, TO_CHAR(created_at, 'DD-MM-YYYY') date FROM users a
-			  LEFT JOIN (SELECT user_id FROM admins) b ON a.id = b.user_id
-			  ORDER BY id
+			SELECT id, username, b.user_id st, TO_CHAR(created_at, 'DD-MM-YYYY') date FROM users a
+			LEFT JOIN (SELECT user_id FROM admins) b ON a.id = b.user_id
+			ORDER BY id
 		""")
 	result = db.session.execute(query)
 	return result.fetchall()
@@ -48,18 +48,18 @@ def send_friend_request(id1, id2):
 
 def get_sent_friend_requests(id):
 	query = text("""
-			  	SELECT a.id, b.username FROM
-					(SELECT receiver_id as id FROM friend_requests WHERE sender_id=:id) a 
-				LEFT JOIN users b ON a.id = b.id
+			SELECT a.id, b.username FROM
+				(SELECT receiver_id as id FROM friend_requests WHERE sender_id=:id) a 
+			LEFT JOIN users b ON a.id = b.id
 		""")
 	result = db.session.execute(query, {"id" : id})
 	return result.fetchall()
 
 def get_received_friend_requests(id):
 	query = text("""
-			  	SELECT a.id, b.username FROM
-					(SELECT sender_id as id FROM friend_requests WHERE receiver_id=:id) a 
-				LEFT JOIN users b ON a.id = b.id
+			SELECT a.id, b.username FROM
+				(SELECT sender_id as id FROM friend_requests WHERE receiver_id=:id) a 
+			LEFT JOIN users b ON a.id = b.id
 		""")
 	result = db.session.execute(query, {"id" : id})
 	return result.fetchall()

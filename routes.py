@@ -34,8 +34,6 @@ def users():
 		friends = q.get_friends(session["user"]["id"])
 		friends = [item[0] for item in friends]
 
-		print("AAA", friend_requests, friends)
-
 	return render_template("userlist.html", users=users, friend_requests=friend_requests, friends=friends)
 
 @app.route("/login",methods=["GET", "POST"])
@@ -129,16 +127,14 @@ def user_page(id):
 	if not username:
 		return render_template("profile.html", errmsg="User does not exist.")
 
-	user = {"id" : id, "username" : username}
+	user = {"id" : id, "username" : username, "admin" : q.is_user_admin(id)}
 	friends = q.get_friends(id)
 	recents = q.get_recently_messaged_with(id)
 	sent_requests = q.get_sent_friend_requests(id)
 	received_requests = q.get_received_friend_requests(id)
 
-	print(recents)
-
-	return render_template("profile.html", user=user, friends=friends
-		, recents=recents, sent_requests=sent_requests, received_requests=received_requests)
+	return render_template("profile.html", user=user, friends=friends,
+		recents=recents, sent_requests=sent_requests, received_requests=received_requests)
 
 
 @app.route("/friendrequest",methods=["POST"])
