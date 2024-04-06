@@ -135,3 +135,8 @@ def accept_friend_request(user_id, target_id):
 		db.session.rollback()
 
 	db.session.commit()
+
+def delete_friend(user_id, target_id):
+	query = text("DELETE FROM contact_pairs WHERE (user1_id = :id1 AND user2_id = :id2) OR (user1_id = :id2 AND user2_id = :id1)")
+	db.session.execute(query, {"id1" : user_id, "id2" : target_id})
+	db.session.commit()

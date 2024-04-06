@@ -191,6 +191,22 @@ def acceptrequest():
 
 	return redirect(request.referrer)
 
+
+@app.route("/deletefriend",methods=["POST"])
+def deletefriend():
+	if "user" not in session:
+		return redirect("/")
+
+	user_id = int(request.form["user_id"])
+	target_id = int(request.form["target_id"])
+
+	if session["user"]["id"] != user_id:
+		return redirect("/")
+	
+	q.delete_friend(user_id, target_id)
+
+	return redirect(request.referrer)
+
 @app.route("/user/<int:id>/message/<int:other_id>")
 def message_page(id, other_id):
 	print("MSG", id, other_id)
