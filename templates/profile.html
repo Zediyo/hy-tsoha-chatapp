@@ -6,7 +6,7 @@
 	{% if user %}
 		<div style="white-space: nowrap;">
 			<h4 class="co" style="display: inline-block; margin-right: 1rem;">Page of {{ user.username }}</h4>
-			{% if session.user.admin %}
+			{% if session.user.admin or session.user.id == user.id %}
 			<a class="btn btn-outline-danger" href="/logout" role="button"
 				style="--bs-btn-padding-y: 0.1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem; margin-bottom: 4px;"
 			>Delete User Account</a>
@@ -35,7 +35,7 @@
 										{{ friend.username }}
 									</td>
 									<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
-										<a class="btn btn-outline-secondary co bco" href="/logout" role="button"
+										<a class="btn btn-outline-secondary co bco" href="/user/{{ session.user.id }}/message/{{ friend.id }}" role="button"
 											style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 										>Message</a>
 										<a class="btn btn-outline-danger" href="/logout" role="button"
@@ -75,12 +75,22 @@
 											{{ req.username }}
 										</td>
 										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
-											<a class="btn btn-outline-success" href="/logout" role="button"
-												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-											>Accept</a>
-											<a class="btn btn-outline-danger" href="/logout" role="button"
-												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-											>Decline</a>
+											<form action="/acceptrequest" method="POST" style="display: inline-block; padding-right: 0.4rem;">
+												<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+												<input type="hidden" name="user_id" value="{{ user.id }}"/>
+												<input type="hidden" name="target_id" value="{{ req.id }}"/>
+												<button class="btn btn-outline-success" type="submit"
+													style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+												>Accept</a>
+											</form>
+											<form action="/cancelrequest" method="POST" style="display: inline-block;">
+												<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+												<input type="hidden" name="sender_id" value="{{ req.id }}"/>
+												<input type="hidden" name="target_id" value="{{ user.id }}"/>
+												<button class="btn btn-outline-danger" type="submit"
+													style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+												>Decline</a>
+											</form>
 										</td>
 									</tr>
 									{% endfor %}
@@ -115,9 +125,14 @@
 											{{ req.username }}
 										</td>
 										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
-											<a class="btn btn-outline-secondary" href="/logout" role="button"
-												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
-											>Cancel</a>
+											<form action="/cancelrequest" method="POST">
+												<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+												<input type="hidden" name="sender_id" value="{{ user.id }}"/>
+												<input type="hidden" name="target_id" value="{{ req.id }}"/>
+												<button class="btn btn-outline-secondary" type="submit"
+													style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
+												>Cancel</a>
+											</form>
 										</td>
 									</tr>
 									{% endfor %}
@@ -137,7 +152,7 @@
 				<div class="col">
 					<div class="row">
 						<h5 class="co">Recently Messaged</h5>
-						<table class="table table-dark table-striped table-sm">
+						<table class="table table-dark table-sm table-hover">
 							{% if recents %}
 							<thead>
 								<tr>
@@ -149,8 +164,7 @@
 							</thead>
 							<tbody>
 								{% for recent in recents %}
-								<a href="/">
-									<tr>
+									<tr style="cursor: pointer;" onclick="window.location.assign('/user/{{ user.id }}/message/{{ recent.other_id }}');">
 										<th scope="row">{{ recent.other_id }}</th>
 										<td>
 											{{ recent.other_name }}
@@ -164,7 +178,6 @@
 											{{ recent.date }}
 										</td>
 									</tr>
-								</a>
 								{% endfor %}
 							</tbody>
 							{% else %}

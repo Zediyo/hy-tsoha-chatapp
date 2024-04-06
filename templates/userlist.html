@@ -40,13 +40,13 @@
 			{% if session.user and session.user.id != user.id %}
 				{% if user.id in friends %}
 				<td>
-					<a class="btn btn-outline-secondary co bco" href="/logout" role="button"
+					<a class="btn btn-outline-secondary co bco" href="/user/{{ session.user.id }}/message/{{ user.id }}" role="button"
 						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 					>Message</a>
 				</td>
 				{% elif user.id in friend_requests %}
 				<td>
-					<a class="btn btn-outline-secondary co bco disabled" href="/logout" role="button"
+					<a class="btn btn-outline-secondary co bco disabled" href="/" role="button"
 						style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 					>Request Sent</a>
 				</td>
