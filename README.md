@@ -11,14 +11,31 @@ Features:
 * Conversations are visible only for participants and admins.
 * Users can delete their own account, admins can delete any account.
 
+# how to test on local machine
 
-python -m venv venv
+1. clone
+2. create .env in root folder and fill it with the following.
 
-source venv/bin/activate
+    `DATABASE_URL=<postgres_db_url>`
 
-pip install -r requirements.txt
+    `SECRET_KEY=<random_key>`
 
-psql < schema.sql
+3. open cmd/terminal in the folder and input the following.
 
-DATABASE_URL=<db_url>
-SECRET_KEY=<key>
+    `python -m venv venv`
+
+    `source venv/bin/activate`
+
+    `pip install -r requirements.txt`
+
+    `psql < schema.sql`
+
+    `flask run`
+
+# todo
+
+* layout, styling
+* messaging (send, receive, edit)
+* search users
+* admin functions
+* user page access
