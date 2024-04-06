@@ -56,3 +56,5 @@ INSERT INTO messages (sender_id, receiver_id, content) VALUES (2, 1, 'potato');
 INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 2, 'peruna');
 INSERT INTO messages (sender_id, receiver_id, content) VALUES (3, 1, 'potato potato potato potato potato potato potato');
 INSERT INTO messages (sender_id, receiver_id, content) VALUES (1, 4, 'potato');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (3, 4, 'potato');
+INSERT INTO messages (sender_id, receiver_id, content) VALUES (4, 5, 'potato');
