@@ -1,17 +1,14 @@
 <header>
-	<nav class="navbar bgcdga">
-		<div class="container-fluid">
+	<nav class="navbar bgcdg">
+		<div class="container-fluid justify-content-end">
 			<a class="navbar-brand mb-0 h1 co co-h" href="/">Chat App</a>
 
-				<div class="row align-items-start" style="flex-grow: 100;">
-					<a class="nav-link col-2 co text-nowrap co-h" href="/users" style="margin-top: 0.2rem; padding-left: 4rem;">All Users</a>
-					{% if session.user %}
-					<a class="nav-link col-2 co text-nowrap co-h" href="/user/{{ session.user.id }}" style="margin-top: 0.2rem;">My Profile</a>
-					{% endif %}
-				</div>
-
-				
-
+			<div style="display: flex; flex-grow: 100; gap: 1rem; padding-left: 2rem; margin-top: 0.2rem;">
+				<a class="nav-link co text-nowrap co-h" href="/users">All Users</a>
+				{% if session.user %}
+				<a class="nav-link co text-nowrap co-h" href="/user/{{ session.user.id }}">My Profile</a>
+				{% endif %}
+			</div>
 
 			{% if session.user %}
 			<div class="d-flex">
