@@ -28,7 +28,7 @@ Features:
 
     `pip install -r requirements.txt`
 
-    `psql < schema.sql`
+    ~~`psql < schema.sql`~~
 
     `flask run`
 
