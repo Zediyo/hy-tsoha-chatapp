@@ -111,6 +111,7 @@ def get_recently_messaged_with(id):
 					ROW_NUMBER() OVER(PARTITION BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id) ORDER BY a.id DESC) rn
 				FROM messages a
 				LEFT JOIN users b ON a.sender_id = b.id
+			  	WHERE sender_id = :id OR receiver_id = :id
 			) a
 			LEFT JOIN users b ON a.other_id = b.id
 			WHERE rn = 1
@@ -118,3 +119,28 @@ def get_recently_messaged_with(id):
 		""")
 	result = db.session.execute(query, {"id" : id})
 	return result.fetchall()
+
+def cancel_friend_request(id1, id2):
+	query = text("DELETE FROM friend_requests WHERE sender_id = :id1 AND receiver_id = :id2")
+	db.session.execute(query, {"id1" : id1, "id2" : id2})
+	db.session.commit()
+
+def accept_friend_request(user_id, target_id):
+	try:
+		with db.session.begin():
+			result = db.session.execute(
+				text("SELECT 1 FROM friend_requests WHERE sender_id = :tid AND receiver_id = :uid"),
+				{ "uid" : user_id, "tid" : target_id })
+			exists = result.fetchone()
+
+			if exists:
+				db.session.execute(
+					text("DELETE FROM friend_requests WHERE sender_id = :tid AND receiver_id = :uid"),
+					{ "uid" : user_id, "tid" : target_id })
+				db.session.execute(
+					text("INSERT INTO contact_pairs (user1_id, user2_id) VALUES (:tid, :uid);"),
+					{ "uid" : user_id, "tid" : target_id })
+	except:
+		db.session.rollback()
+
+	db.session.commit()
