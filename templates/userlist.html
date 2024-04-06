@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
+<div class="container-sm bgclg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;">
 <h4 class="co">All Users</h4>
 <table class="table table-dark table-striped table-sm">
 	<thead>
@@ -17,7 +17,7 @@
 		<tr>
 			<th scope="row">{{ user.id }}</th>
 
-			{% if session.admin %}
+			{% if session.user.admin %}
 			<td>
 				<a class="nav-link col text-nowrap" href="/user/{{ user.id }}">{{ user.username }}</a>
 			</td>
@@ -68,5 +68,5 @@
 		{% endfor %}
 	</tbody>
 </table>
-
+</div>
 {% endblock %}

@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 
-<p>{{ errmsg }}</p>
-
-<form action="/login" method="POST">
-	<p>Username:<br>
-	<input type="text" name="username"></p>
-	<p>Password:<br>
-	<input type="password" name="password"></p>
-	<input type="submit" value="Login">
-	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-</form>
+<div class="container-sm bgcg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem; max-width: 20rem;">
+	<p>{{ errmsg }}</p>
+	<form action="/login" method="POST">
+		<label for="un" class="form-label co">Username:</label>
+		<input type="text" name="username" id="un" class="form-control bco mb-3"></input>
+		<label for="pw" class="form-label co">Password:</label>
+		<input type="password" name="password" id="pw" class="form-control bco mb-3"></input>
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+		<button type="submit" class="btn btn-light co bco bgcdg mb-3">Login</button>
+	</form>
+</div>
 
 {% endblock %}

@@ -1,17 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
 
-<p>{{ errmsg }}</p>
-<form action="/register" method="POST" onsubmit="return check(this)">
-	<p>Username:<br>
-	<input type="text" name="username"></p>
-	<p>Password:<br>
-		<input type="password" name="password1"></p>
-	<p>Repeat Password:<br>
-	<input type="password" name="password2"></p>
-	<input type="submit" value="Create User">
-	<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-</form>
+<div class="container-sm bgcg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem; max-width: 20rem;">
+	<p>{{ errmsg }}</p>
+	<form action="/register" method="POST" onsubmit="return check(this)">
+		<label for="un" class="form-label co">Username:</label>
+		<input type="text" name="username" id="un" class="form-control bco mb-3"></input>
+		<label for="pw1" class="form-label co">Password:</label>
+		<input type="password" name="password1" id="pw1" class="form-control bco mb-3"></input>
+		<label for="pw2" class="form-label co">Repeat Password:</label>
+		<input type="password" name="password2" id="pw2" class="form-control bco mb-3"></input>
+		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+		<button type="submit" class="btn btn-light co bco bgcdg mb-3">Create User</button>
+	</form>
+</div>
 
 <script>
 	function check(form)
