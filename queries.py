@@ -1,15 +1,6 @@
 from db import db
 from sqlalchemy.sql import text
 
-def add_visit():
-	db.session.execute("INSERT INTO visitors (time) VALUES (NOW())")
-	db.session.commit()
-
-def get_counter():
-	result = db.session.execute("SELECT COUNT(*) FROM visitors")
-	counter = result.fetchone()[0]
-	return counter
-
 def get_user(username):
 	query = text("SELECT id, password FROM users WHERE username=:username")
 	result = db.session.execute(query, {"username" : username})
