@@ -109,6 +109,8 @@
 {
 	word-wrap: break-word;
 	text-wrap: wrap;
+	overflow-wrap: normal;
+	word-break: break-word;
 	padding-bottom: 0.45em;
 }
 
