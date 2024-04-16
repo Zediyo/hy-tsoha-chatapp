@@ -36,5 +36,5 @@ def drop_all_tables():
 		db.session.commit()
 
 with app.app_context():
-	# drop_all_tables()
+	drop_all_tables()
 	create_tables_if_missing()

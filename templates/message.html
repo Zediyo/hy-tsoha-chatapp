@@ -2,7 +2,336 @@
 {% block content %}
 
 <div class="container-sm bgclg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;">
-	<p style="color: green;">Message Page</p>
+	{% if errmsg %}
+		<p style="color: red;">{{ errmsg }}</p>
+	{% endif %}
+
+	{% if user_id %}
+	<div class="container mt-5 mb-5">
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+			<div class="card bco">
+
+				<div class="card-header bgcdg">
+					<div class="co">Chat with {{ target_username }}</div>
+					
+				</div>
+	
+				<div class="card-body chat-container bgcg">
+					<!-- messages -->
+					<div class="chat-sub-container">
+						{% if messages %}
+						{% for msg in messages %}
+						{% if user_id == msg.sender_id %}
+						<!-- messages by current user -->
+						<div class="message-container user-msg-container">
+
+							{% if session.user.id == user_id %}
+							<!-- hover action buttons -->
+							<div class="btn-hover" id="editbtn{{ msg.id }}">
+								<button type="button" class="btn btn-secondary btn-sm"
+								style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '{{msg.content}}')">
+									Edit
+								</button>
+								<button type="button" class="btn btn-danger btn-sm"
+								style="font-size: 0.6em; padding: 1px 3px;">
+									Delete
+								</button>
+							</div>
+
+							<!-- edit box for message -->
+							<form id="editform{{ msg.id }}" style="display: none;">
+								<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+								<input type="hidden" name="original" value="{{ msg }}"/>
+	
+								<div style="display: flex; justify-content: flex-end; padding-bottom: 2px; padding-right: 2px; column-gap: 5px;">
+									<button type="button" class="btn btn-secondary btn-sm"
+										style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '')">
+										Cancel
+									</button>
+										<button type="button" class="btn btn-success btn-sm"
+										style="font-size: 0.6em; padding: 1px 3px;">
+										Submit
+									</button>
+								</div>
+
+								<span class="badge t-start ctext" name="content{{ msg.id }}" id="editbox{{ msg.id }}"
+									contenteditable="true" style="background-color: red; display: block;"
+								>{{ msg.content }}</span>
+
+									<!-- <button type="submit" class="btn btn-warning">Send</button> -->
+								<!-- </div> -->
+							</form>
+							{% endif %}
+							
+							<!-- message + timestamp -->
+							<div class="badge t-start bgc-user ctext" id="chatitem{{ msg.id }}">{{ msg.content }}</div>
+							{% if msg.edit_at %}
+								<div class="badge t-end co" style="font-size: 0.65em;">Edited &#x2022; {{ msg.time }} &#x2022; {{ msg.date }}</div>
+							{% else %}
+								<div class="badge t-end co" style="font-size: 0.65em;">{{ msg.time }} &#x2022; {{ msg.date }}</div>
+							{% endif %}
+						</div>
+
+						{% else %}
+						<!-- messages by other user -->
+						<div class="message-container other-msg-container">
+							<div class="badge t-start bgc-other ctext">{{ msg.content }}</div>
+							{% if msg.edit_at %}
+								<div class="badge t-start co" style="font-size: 0.65em;">Edited &#x2022; {{ msg.time }} &#x2022; {{ msg.date }}</div>
+							{% else %}
+								<div class="badge t-start co" style="font-size: 0.65em;">{{ msg.time }} &#x2022; {{ msg.date }}</div>
+							{% endif %}
+						</div>
+						{% endif %}
+						{% endfor %}
+						{% else %}
+						<div class="message-container">
+							<div class="badge ctext">No message history.</div>
+						</div>
+						{% endif %}
+					</div>
+
+					<!-- toggle editbox/message script -->
+					<script>
+						function editButtonClick(id, content)
+						{
+							console.log("click" + id)
+							var editform = document.getElementById("editform"+id);
+							var chatitem = document.getElementById("chatitem"+id);
+							var editbox = document.getElementById("editbox"+id);
+							var editbtn = document.getElementById("editbtn"+id);
+
+							if ( editform.style.display === "none" )
+							{
+								editform.style.display = "block";
+								chatitem.style.display = "none";
+								editbtn.style.display = "none";
+								editbox.innerText = content;
+							}
+							else
+							{
+								editform.style.display = "none";
+								chatitem.style.display = "block";
+								editbtn.style.display = "block";
+							}
+						}
+					</script>
+
+				</div>
+
+				<div class="card-footer bgcdg">
+					{% if can_msg %}
+					<form>
+						<div class="input-group">
+							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+							<input type="text" class="form-control" name="message" placeholder="Type your message"
+								style="box-shadow: none;">
+							<button class="btn btn-warning">Send</button>
+						</div>
+					</form>
+					{% else %}
+					<form>
+						<div class="input-group mt-3">
+							<input type="text" class="form-control" placeholder="You cannot send a message to this user." disabled>
+							<button class="btn btn-warning" disabled>Send</button>
+						</div>
+					</form>
+					{% endif %}
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+
+<div class="container-sm bgclg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;">
+
+	
+	{% if user_id %}
+		<div style="white-space: nowrap;">
+			<h4 class="co mb-3" style="display: inline-block; margin-right: 1rem;">Chat with {{ target_username }}</h4>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="col me-3">
+					<div class="row">
+						<table class="table table-dark table-sm">
+							{% if messages %}
+							<tbody>
+								{% for msg in messages %}
+								<tr>
+									<th scope="col"></th>
+
+									{% if msg.sender_id == user_id %}
+									<td class="text-end" style="word-break: break-all;">
+										<span class="badge text-bg-success"> {{ msg }} </span>
+									</td>
+									{% else %}
+									<td style="word-break: break-all;">
+										<span class="badge text-bg-primary"> {{ msg }} </span>
+									</td>
+									{% endif %}
+
+									<th scope="col"></th>
+								</tr>
+								{% endfor %}
+							</tbody>
+							{% else %}
+							<thead>
+								<tr>
+									<th scope="col"></th>
+									<th scope="col">No message history.</th>
+								</tr>
+							</thead>
+							{% endif %}
+						</table>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+		<div class="container mt-5 mb-5">
+			<div class="row">
+				<div class="col-md-8 offset-md-2">
+				<div class="card bco">
+
+					<div class="card-header bgcdg">
+						<div class="co">Chat with {{ target_username }}</div>
+						
+					</div>
+		
+					<div class="card-body chat-container bgcg">
+						<!-- messages -->
+						<div class="chat-sub-container">
+							{% if messages %}
+							{% for msg in messages %}
+							{% if user_id == msg.sender_id %}
+							<!-- messages by current user -->
+							<div class="message-container user-msg-container">
+
+								{% if session.user.id == user_id %}
+								<!-- hover action buttons -->
+								<div class="btn-hover" id="editbtn{{ msg.id }}">
+									<button type="button" class="btn btn-secondary btn-sm"
+									style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '{{msg.content}}')">
+										Edit
+									</button>
+									<button type="button" class="btn btn-danger btn-sm"
+									style="font-size: 0.6em; padding: 1px 3px;">
+										Delete
+									</button>
+								</div>
+
+								<!-- edit box for message -->
+								<form id="editform{{ msg.id }}" style="display: none;">
+									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+									<input type="hidden" name="original" value="{{ msg }}"/>
+		
+									<div style="display: flex; justify-content: flex-end; padding-bottom: 2px; padding-right: 2px; column-gap: 5px;">
+										<button type="button" class="btn btn-secondary btn-sm"
+											style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '')">
+											Cancel
+										</button>
+											<button type="button" class="btn btn-success btn-sm"
+											style="font-size: 0.6em; padding: 1px 3px;">
+											Submit
+										</button>
+									</div>
+
+									<span class="badge t-start ctext" name="content{{ msg.id }}" id="editbox{{ msg.id }}"
+										contenteditable="true" style="background-color: red; display: block;"
+									>{{ msg.content }}</span>
+
+										<!-- <button type="submit" class="btn btn-warning">Send</button> -->
+									<!-- </div> -->
+								</form>
+								{% endif %}
+								
+								<!-- message + timestamp -->
+								<div class="badge t-start bgc-user ctext" id="chatitem{{ msg.id }}">{{ msg.content }}</div>
+								{% if msg.edit_at %}
+									<div class="badge t-end co" style="font-size: 0.65em;">Edited &#x2022; {{ msg.time }} &#x2022; {{ msg.date }}</div>
+								{% else %}
+									<div class="badge t-end co" style="font-size: 0.65em;">{{ msg.time }} &#x2022; {{ msg.date }}</div>
+								{% endif %}
+							</div>
+
+							{% else %}
+							<!-- messages by other user -->
+							<div class="message-container other-msg-container">
+								<div class="badge t-start bgc-other ctext">{{ msg.content }}</div>
+								{% if msg.edit_at %}
+									<div class="badge t-start co" style="font-size: 0.65em;">Edited &#x2022; {{ msg.time }} &#x2022; {{ msg.date }}</div>
+								{% else %}
+									<div class="badge t-start co" style="font-size: 0.65em;">{{ msg.time }} &#x2022; {{ msg.date }}</div>
+								{% endif %}
+							</div>
+							{% endif %}
+							{% endfor %}
+							{% else %}
+							<div class="message-container">
+								<div class="badge ctext">No message history.</div>
+							</div>
+							{% endif %}
+						</div>
+
+						<!-- toggle editbox/message script -->
+						<script>
+							function editButtonClick(id, content)
+							{
+								console.log("click" + id)
+								var editform = document.getElementById("editform"+id);
+								var chatitem = document.getElementById("chatitem"+id);
+								var editbox = document.getElementById("editbox"+id);
+								var editbtn = document.getElementById("editbtn"+id);
+
+								if ( editform.style.display === "none" )
+								{
+									editform.style.display = "block";
+									chatitem.style.display = "none";
+									editbtn.style.display = "none";
+									editbox.innerText = content;
+								}
+								else
+								{
+									editform.style.display = "none";
+									chatitem.style.display = "block";
+									editbtn.style.display = "block";
+								}
+							}
+						</script>
+
+					</div>
+
+					<div class="card-footer bgcdg">
+						{% if can_msg %}
+						<form>
+							<div class="input-group">
+								<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+								<input type="text" class="form-control" name="message" placeholder="Type your message"
+									style="box-shadow: none;">
+								<button class="btn btn-warning">Send</button>
+							</div>
+						</form>
+						{% else %}
+						<form>
+							<div class="input-group mt-3">
+								<input type="text" class="form-control" placeholder="You cannot send a message to this user." disabled>
+								<button class="btn btn-warning" disabled>Send</button>
+							</div>
+						</form>
+						{% endif %}
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}	
 </div>
 
 {% endblock %}

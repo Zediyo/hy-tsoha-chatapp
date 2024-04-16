@@ -205,5 +205,55 @@ def deletefriend():
 
 @app.route("/user/<int:id>/message/<int:other_id>")
 def message_page(id, other_id):
-	print("MSG", id, other_id)
-	return render_template("message.html")
+	ses_id = session["user"]["id"]
+
+	if ses_id != id and session["user"]["admin"] == False:
+		return render_template("message.html", errmsg="No access.")
+	
+	## if user does not exist they still might have message history if the user is deleted.
+	target_username = q.get_username_from_id(other_id)
+
+	if not target_username:
+		target_username = "Unknown User"
+
+	can_msg = q.is_friends_with(ses_id, other_id)
+
+	messages = q.get_messages_with(id, other_id)
+
+	messages = []
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 1, "time": "10:15", "date": "12.12.23", "content": "This is a message number 1, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 2, "time": "10:15", "date": "12.12.23", "content": "This is a message number 2, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 3, "time": "10:15", "date": "12.12.23", "content": "This is a message number 3, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	messages.append({"id": 4, "time": "10:15", "date": "12.12.23", "content": "This is a message number 4, This is a message, This is a message, This is a message", "sender_id": 3, "receiver_id": 1})
+	messages.append({"id": 5, "time": "10:15", "date": "12.12.23", "content": "This is a message number 5, This is a message, This is a message, This is a message", "sender_id": 3, "receiver_id": 1})
+	messages.append({"id": 6, "time": "10:15", "date": "12.12.23", "content": "This is a message number 6, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3, "edit_at": "a"})
+	messages.append({"id": 7, "time": "10:15", "date": "12.12.23", "content": "This is a message number 7, This is a message, This is a message, This is a message", "sender_id": 3, "receiver_id": 1})
+	messages.append({"id": 8, "time": "10:15", "date": "12.12.23", "content": "This is a message number 8, This is a message, This is a message, This is a message", "sender_id": 1, "receiver_id": 3})
+	
+	return render_template("message.html", can_msg=can_msg, target_username=target_username, messages=messages, user_id=id)

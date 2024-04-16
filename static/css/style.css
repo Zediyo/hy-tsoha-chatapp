@@ -1,13 +1,3 @@
-.btn-primary {
-    background-color: #ff0000; /* Red */
-    border-color: #ff0000;
-}
-
-.btn-secondary {
-    background-color: #00ff00; /* Green */
-    border-color: #00ff00;
-}
-
 .bgcg
 {
 	background-color: #303030;
@@ -41,4 +31,97 @@
 .bco-h:hover
 {
 	border-color: #fb8c00;
+}
+
+
+.chat-container
+{
+	height: 500px;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column-reverse;
+}
+
+.chat-sub-container
+{
+	display: flex;
+	flex-direction: column;
+}
+
+.message-container
+{
+	margin-bottom: 5px;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	padding-top: 5px;
+}
+
+.message-container:hover .btn-hover
+{
+	display: block;
+}
+
+.btn-hover
+{
+	display: none;
+	position: absolute;
+	top: -1.3rem;
+	right: 2px;
+}
+
+.user-msg-container
+{
+	align-self: flex-end;
+	padding-left: 2rem;
+}
+
+.t-end
+{
+	
+	text-align: end;
+}
+
+.other-msg-container
+{
+	align-self: flex-start;
+	padding-right: 2rem;
+}
+
+.t-start
+{
+	
+	text-align: start;
+}
+
+.bgc-user
+{
+	background-color: rgb(0, 32, 139);
+}
+
+.bgc-other
+{
+	background-color: #008d3b;
+}
+
+.ctext
+{
+	word-wrap: break-word;
+	text-wrap: wrap;
+	padding-bottom: 0.45em;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color:#fb8c00;
+    -webkit-box-shadow: inset 0 0 6px rgba(90,90,90,0.2);
 }
