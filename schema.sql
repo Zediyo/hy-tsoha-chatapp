@@ -1,3 +1,4 @@
+SET timezone = 'UTC';
 CREATE TABLE users (id SERIAL PRIMARY KEY, username TEXT UNIQUE, password TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE admins (user_id INTEGER UNIQUE REFERENCES users(id), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE friend_requests( 
@@ -42,6 +43,7 @@ INSERT INTO admins (user_id) VALUES (7);
 
 INSERT INTO contact_pairs (user1_id, user2_id) VALUES (1, 2);
 INSERT INTO contact_pairs (user1_id, user2_id) VALUES (3, 1);
+INSERT INTO contact_pairs (user1_id, user2_id) VALUES (3, 2);
 
 INSERT INTO friend_requests (sender_id, receiver_id) VALUES (1, 4);
 INSERT INTO friend_requests (sender_id, receiver_id) VALUES (1, 5);
