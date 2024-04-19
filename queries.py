@@ -142,4 +142,49 @@ def delete_friend(user_id, target_id):
 	db.session.commit()
 
 def get_messages_with(user_id, target_id):
-	return ["message1", "message2", "message3"]
+	query = text("""
+		SELECT
+			id, sender_id, receiver_id, content,
+			TO_CHAR(sent_at, 'HH24:MI') time,
+			TO_CHAR(sent_at, 'DD.MM.YY') date,
+			edit_at
+		FROM
+			messages
+		WHERE
+			(sender_id = :id1 AND receiver_id = :id2) OR (sender_id = :id2 AND receiver_id = :id1)
+		ORDER BY
+			id ASC
+		LIMIT 100
+	""")
+	result = db.session.execute(query, { "id1" : user_id, "id2" : target_id })
+	return result.fetchall()
+
+def send_message(sender_id, receiver_id, content):
+	try:
+		query = text("INSERT INTO messages (sender_id, receiver_id, content) VALUES (:sender, :receiver, :content)")
+		db.session.execute(query, { "sender" : sender_id, "receiver" : receiver_id, "content" : content })
+		db.session.commit()
+	except:
+		return False
+
+	return True
+
+def edit_message(sender_id, msg_id, content):
+	try:
+		query = text("UPDATE messages SET content = :content, edit_at = NOW() WHERE id = :msg_id AND sender_id = :sender_id")
+		db.session.execute(query, { "msg_id" : msg_id, "sender_id" : sender_id, "content" : content })
+		db.session.commit()
+	except:
+		return False
+
+	return True
+
+def delete_message(sender_id, msg_id):
+	try:
+		query = text("DELETE FROM messages WHERE id = :msg_id AND sender_id = :sender_id")
+		db.session.execute(query, { "msg_id" : msg_id, "sender_id" : sender_id })
+		db.session.commit()
+	except:
+		return False
+
+	return True
