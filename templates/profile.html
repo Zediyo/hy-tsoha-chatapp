@@ -11,9 +11,14 @@
 		<div style="white-space: nowrap;">
 			<h4 class="co mb-3" style="display: inline-block; margin-right: 1rem;">Page of {{ user.username }}</h4>
 			{% if session.user.id == user.id or ( session.user.admin and not user.admin ) %}
-			<a class="btn btn-outline-danger" href="/logout" role="button"
-				style="--bs-btn-padding-y: 0.1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem; margin-bottom: 4px;"
-			>Delete User Account</a>
+			<form action="/deleteuseraccount" method="POST" onsubmit="return confirmSubmit('DELETE USER ACCOUNT', event)" style="display: inline-block;">
+				<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+				<input type="hidden" name="user_id" value="{{ user.id }}"/>
+				<button class="btn btn-outline-danger" type="submit"
+				style="--bs-btn-padding-y: 0.1rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem; margin-bottom: 4px;">
+					Delete User Account
+				</button>
+			</form>
 			{% endif %}
 		</div>
 
@@ -39,11 +44,12 @@
 										{{ friend.username }}
 									</td>
 									<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+										{% if session.user.id == user.id %}
 										<a class="btn btn-outline-secondary co bco" href="/user/{{ session.user.id }}/message/{{ friend.id }}" role="button"
 											style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 										>Message</a>
 
-										<form action="/deletefriend" method="POST" style="display: inline-block;">
+										<form action="/deletefriend" method="POST" style="display: inline-block;" onsubmit="return confirmSubmit('remove friend {{ friend.username }}', event)">
 											<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 											<input type="hidden" name="user_id" value="{{ user.id }}"/>
 											<input type="hidden" name="target_id" value="{{ friend.id }}"/>
@@ -51,6 +57,7 @@
 												style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 											>Remove Friend</button>
 										</form>
+										{% endif %}
 									</td>
 								</tr>
 								{% endfor %}
@@ -85,6 +92,7 @@
 											{{ req.username }}
 										</td>
 										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+											{% if session.user.id == user.id %}
 											<form action="/acceptrequest" method="POST" style="display: inline-block;">
 												<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 												<input type="hidden" name="user_id" value="{{ user.id }}"/>
@@ -101,6 +109,7 @@
 													style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 												>Decline</button>
 											</form>
+											{% endif %}
 										</td>
 									</tr>
 									{% endfor %}
@@ -135,6 +144,7 @@
 											{{ req.username }}
 										</td>
 										<td style="text-align: right; width: 12rem; padding-right: 0.5rem;">
+											{% if session.user.id == user.id %}
 											<form action="/cancelrequest" method="POST">
 												<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 												<input type="hidden" name="sender_id" value="{{ user.id }}"/>
@@ -143,6 +153,7 @@
 													style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .4rem; --bs-btn-font-size: .70rem;"
 												>Cancel</button>
 											</form>
+											{% endif %}
 										</td>
 									</tr>
 									{% endfor %}
@@ -167,8 +178,8 @@
 							<thead>
 								<tr>
 									<th scope="col">#</th>
-									<th scope="col">Username</th>
-									<th scope="col">Message</th>
+									<th scope="col">User</th>
+									<th scope="col">Last Message</th>
 									<th scope="col">Date</th>
 								</tr>
 							</thead>
