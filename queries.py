@@ -128,6 +128,7 @@ def accept_friend_request(user_id, target_id):
 				db.session.execute(
 					text("DELETE FROM friend_requests WHERE sender_id = :tid AND receiver_id = :uid"),
 					{ "uid" : user_id, "tid" : target_id })
+
 				db.session.execute(
 					text("INSERT INTO contact_pairs (user1_id, user2_id) VALUES (:tid, :uid);"),
 					{ "uid" : user_id, "tid" : target_id })
@@ -159,6 +160,22 @@ def get_messages_with(user_id, target_id):
 	result = db.session.execute(query, { "id1" : user_id, "id2" : target_id })
 	return result.fetchall()
 
+def check_new_messages(user_id, target_id, timestamp):
+	query = text(""" SELECT EXISTS
+		(SELECT
+			1
+		FROM
+			messages
+		WHERE (
+			EXTRACT(EPOCH FROM sent_at) > :timestamp OR
+			EXTRACT(EPOCH FROM edit_at) > :timestamp) AND (
+				(sender_id = :id1 AND receiver_id = :id2) OR
+			  	(sender_id = :id2 AND receiver_id = :id1)
+			))
+	""")
+	result = db.session.execute(query, { "id1" : user_id, "id2" : target_id, "timestamp" : timestamp })
+	return result.fetchone()[0]
+
 def send_message(sender_id, receiver_id, content):
 	try:
 		query = text("INSERT INTO messages (sender_id, receiver_id, content) VALUES (:sender, :receiver, :content)")
@@ -171,7 +188,7 @@ def send_message(sender_id, receiver_id, content):
 
 def edit_message(sender_id, msg_id, content):
 	try:
-		query = text("UPDATE messages SET content = :content, edit_at = NOW() WHERE id = :msg_id AND sender_id = :sender_id")
+		query = text("UPDATE messages SET content = :content, edit_at = NOW() AT TIME ZONE 'UTC' WHERE id = :msg_id AND sender_id = :sender_id")
 		db.session.execute(query, { "msg_id" : msg_id, "sender_id" : sender_id, "content" : content })
 		db.session.commit()
 	except:
@@ -188,3 +205,40 @@ def delete_message(sender_id, msg_id):
 		return False
 
 	return True
+
+def delete_user_account(user_id):
+	ret = False
+	try:
+		with db.session.begin():
+			result = db.session.execute(
+				text("SELECT 1 FROM users WHERE id = :user_id"),
+				{ "user_id" : user_id })
+			exists = result.fetchone()
+
+			if exists:
+				ret = True
+				db.session.execute(
+					text("DELETE FROM friend_requests WHERE sender_id = :user_id OR receiver_id = :user_id"),
+					{ "user_id" : user_id })
+				
+				db.session.execute(
+					text("DELETE FROM admins WHERE user_id = :user_id"),
+					{ "user_id" : user_id })
+	
+				db.session.execute(
+					text("DELETE FROM contact_pairs WHERE user1_id = :user_id OR user2_id = :user_id"),
+					{ "user_id" : user_id })
+				
+				db.session.execute(
+					text("DELETE FROM messages WHERE sender_id = :user_id OR receiver_id = :user_id"),
+					{ "user_id" : user_id })
+				
+				db.session.execute(
+					text("DELETE FROM users WHERE id = :user_id"),
+					{ "user_id" : user_id })
+	except:
+		ret = False
+		db.session.rollback()
+
+	db.session.commit()
+	return ret
