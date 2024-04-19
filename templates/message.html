@@ -33,7 +33,7 @@
 									style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '{{msg.content}}')">
 										Edit
 									</button>
-									<form action="/deletemessage" method="POST" style="display: inline-block;">
+									<form action="/deletemessage" method="POST" style="display: inline-block;" onsubmit="return confirmSubmit('delete this message', event)">
 										<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 										<input type="hidden" name="sender_id" value="{{ msg.sender_id }}"/>
 										<input type="hidden" name="msg_id" value="{{ msg.id }}"/>
@@ -191,6 +191,26 @@
 
 							document.getElementById("content"+id).value = document.getElementById("editbox"+id).textContent;
 						}
+
+						// potato polling solution for chat updates, but good enough for this.
+						var lastCheck = "{{ last_check }}";
+						var user_id = "{{ user_id }}"
+						var target_id = "{{ other_id }}"
+
+						function checkForUpdates()
+						{
+							fetch(`/checknewmessages?user_id=${user_id}&target_id=${target_id}&timestamp=${lastCheck}`)
+							.then(res => res.json())
+							.then(data => 
+							{
+								if ( data.result == true )
+								{
+									location.reload();
+								}
+							})
+						}
+
+						setInterval(checkForUpdates, 2500);
 					</script>
 				</div>
 			</div>
