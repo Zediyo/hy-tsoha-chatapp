@@ -23,7 +23,7 @@
 							{% if messages %}
 							{% for msg in messages %}
 							{% if user_id == msg.sender_id %}
-							<!-- messages by current user -->
+							<!-- message by current user -->
 							<div class="message-container user-msg-container">
 
 								{% if session.user.id == user_id %}
@@ -33,16 +33,23 @@
 									style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '{{msg.content}}')">
 										Edit
 									</button>
-									<button type="button" class="btn btn-danger btn-sm"
-									style="font-size: 0.6em; padding: 1px 3px;">
-										Delete
-									</button>
+									<form action="/deletemessage" method="POST" style="display: inline-block;">
+										<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+										<input type="hidden" name="sender_id" value="{{ msg.sender_id }}"/>
+										<input type="hidden" name="msg_id" value="{{ msg.id }}"/>
+										<button type="submit" class="btn btn-danger btn-sm"
+										style="font-size: 0.6em; padding: 1px 3px;">
+											Delete
+										</button>
+									</form>
 								</div>
 
 								<!-- edit box for message -->
-								<form id="editform{{ msg.id }}" style="display: none;" action="/register" method="POST">
+								<form id="editform{{ msg.id }}" style="display: none;" action="/editmessage" method="POST" onsubmit="return checkEditSubmit('{{msg.id}}', '{{ msg.content }}')">
 									<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-									<input type="hidden" name="original" value="{{ msg }}"/>
+									<input type="hidden" name="sender_id" value="{{ msg.sender_id }}"/>
+									<input type="hidden" name="msg_id" value="{{ msg.id }}"/>
+									<input type="hidden" name="content{{ msg.id }}" id="content{{ msg.id }}" value=""/>
 		
 									<div style="display: flex; justify-content: flex-end; padding-bottom: 2px; padding-right: 2px; column-gap: 5px;">
 										<div class="badge co" style="font-size: 0.65em; padding-right: 0;"></div>
@@ -50,13 +57,13 @@
 											style="font-size: 0.6em; padding: 1px 3px;" onclick="editButtonClick('{{msg.id}}', '')">
 											Cancel
 										</button>
-											<button type="submit" class="btn btn-success btn-sm"
+										<button type="submit" class="btn btn-success btn-sm"
 											style="font-size: 0.6em; padding: 1px 3px;">
 											Submit
 										</button>
 									</div>
 
-									<span class="badge t-start ctext" name="content{{ msg.id }}" id="editbox{{ msg.id }}"
+									<span class="badge t-start ctext" id="editbox{{ msg.id }}"
 										contenteditable="true" style="background-color: red; display: block;"
 										onkeypress="return checkEdit(this, event)"
 										onpaste="return checkEdit(this, event)"
@@ -100,8 +107,10 @@
 
 					<div class="card-footer bgcdg">
 						{% if can_msg %}
-						<form>
+						<form action="/sendmessage" method="POST">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+							<input type="hidden" name="sender_id" value="{{ user_id }}"/>
+							<input type="hidden" name="target_id" value="{{ other_id }}"/>
 							<div class="input-group">
 								<input type="text" class="form-control" name="message" placeholder="Type your message" maxlength="255"
 								style="box-shadow: none; position: relative;" autocomplete="off" id="messageinput" oninput="return updateInputCount(this)">
@@ -168,6 +177,19 @@
 							var max = parseInt(input.getAttribute("maxlength"));
 							var count = input.nextElementSibling;
 							count.textContent = cur + '/' + max;
+						}
+
+						function checkEditSubmit(id, old_content)
+						{
+							let new_content = document.getElementById("editbox"+id).textContent;
+
+							if ( new_content.length == 0 || new_content.length > 255 || new_content == old_content )
+							{
+								editButtonClick(id, "")
+								return false;
+							}
+
+							document.getElementById("content"+id).value = document.getElementById("editbox"+id).textContent;
 						}
 					</script>
 				</div>
