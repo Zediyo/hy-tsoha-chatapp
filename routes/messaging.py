@@ -15,9 +15,10 @@ def message_page(id, other_id):
 	if not target_username:
 		target_username = "Unknown User"
 
+	## ses_id so admins viewing other chats cant msg them.
 	can_msg = q.is_friends_with(ses_id, other_id)
 
-	last_check = datetime.datetime.now(datetime.timezone.utc).timestamp()
+	last_check = q.get_last_message_timestamp(id, other_id)
 	messages = q.get_messages_with(id, other_id)
 
 	return render_template("message.html",

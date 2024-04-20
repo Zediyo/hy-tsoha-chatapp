@@ -64,6 +64,21 @@ def check_new_messages(user_id, target_id, timestamp):
 	result = db.session.execute(query, { "id1" : user_id, "id2" : target_id, "timestamp" : timestamp })
 	return result.fetchone()[0]
 
+def get_last_message_timestamp(user_id, target_id):
+	query = text("""
+		SELECT
+			EXTRACT(EPOCH FROM MAX(GREATEST(sent_at, edit_at))) timestamp
+		FROM
+			messages
+		WHERE
+			(sender_id = :id1 AND receiver_id = :id2) OR
+			(sender_id = :id2 AND receiver_id = :id1)
+	""")
+	result = db.session.execute(query, { "id1" : user_id, "id2" : target_id })
+	ret = result.fetchone()
+	return ret[0] if ret else 0
+
+
 def send_message(sender_id, receiver_id, content):
 	try:
 		query = text("INSERT INTO messages (sender_id, receiver_id, content) VALUES (:sender, :receiver, :content)")
@@ -76,7 +91,7 @@ def send_message(sender_id, receiver_id, content):
 
 def edit_message(sender_id, msg_id, content):
 	try:
-		query = text("UPDATE messages SET content = :content, edit_at = NOW() AT TIME ZONE 'UTC' WHERE id = :msg_id AND sender_id = :sender_id")
+		query = text("UPDATE messages SET content = :content, edit_at = CURRENT_TIMESTAMP WHERE id = :msg_id AND sender_id = :sender_id")
 		db.session.execute(query, { "msg_id" : msg_id, "sender_id" : sender_id, "content" : content })
 		db.session.commit()
 	except:
@@ -86,7 +101,7 @@ def edit_message(sender_id, msg_id, content):
 
 def delete_message(sender_id, msg_id):
 	try:
-		query = text("UPDATE messages SET deleted = true, edit_at = NOW() AT TIME ZONE 'UTC' WHERE id = :msg_id AND sender_id = :sender_id")
+		query = text("UPDATE messages SET deleted = true, edit_at = CURRENT_TIMESTAMP WHERE id = :msg_id AND sender_id = :sender_id")
 		db.session.execute(query, { "msg_id" : msg_id, "sender_id" : sender_id })
 		db.session.commit()
 	except:
