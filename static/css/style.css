@@ -13,6 +13,27 @@
 	background-color: #424242;
 }
 
+.search
+{
+	background-color: #424242;
+	border-color: #fb8c00;
+	color: rgb(226, 226, 226);
+}
+
+.search:focus
+{
+	background-color: #424242;
+	color: white;
+	box-shadow: none;
+	outline: none;
+	border-color: #fb8c00;
+}
+
+.search::placeholder
+{
+	color: #949494;
+}
+
 .co
 {
 	color: #fb8c00;
