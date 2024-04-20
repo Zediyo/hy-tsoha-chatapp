@@ -127,10 +127,16 @@
 						{% endif %}
 					</div>
 					<script>
-						var editing = false;
+						//track open edit box
+						var editing = -1;
+	
 						//toggle edit message mode on/off
 						function editButtonClick(id, content)
 						{
+							//close active edit box if opening a new one
+							if ( editing != -1 && id != editing )
+								editButtonClick(editing, "")
+	
 							var editform = document.getElementById("editform"+id);
 							var chatitem = document.getElementById("chatitem"+id);
 							var editbox = document.getElementById("editbox"+id);
@@ -142,12 +148,16 @@
 								chatitem.style.display = "none";
 								editbtn.style.display = "none";
 								editbox.innerText = content;
+
+								editing = id;
 							}
 							else
 							{
 								editform.style.display = "none";
 								chatitem.style.display = "block";
 								editbtn.style.display = null;
+
+								editing = -1;
 							}
 						}
 
@@ -205,7 +215,8 @@
 							.then(res => res.json())
 							.then(data => 
 							{
-								if ( data.result == true )
+								//refresh on new data only if user is not currently editing a message
+								if ( data.result == true && editing == -1 )
 								{
 									localStorage.setItem("chatInput", document.getElementById("messageinput").value)
 									location.reload();
