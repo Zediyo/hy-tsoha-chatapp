@@ -10,9 +10,9 @@
 	<div class="container mt-3">
 		<div class="row">
 			<div class="col-md-8 offset-md-2">
-				<div class="card bco" style="max-height: 85vh;">
+				<div class="card bco bgcdg" style="max-height: 80vh;">
 
-					<div class="card-header bgcdg">
+					<div class="card-header bgcdg" style="border-radius: 1rem;">
 						<div class="co">Chat with {{ target_username }}</div>
 						
 					</div>
@@ -105,7 +105,7 @@
 						</div>
 					</div>
 
-					<div class="card-footer bgcdg">
+					<div class="card-footer bgcdg" style="border-radius: 1rem;">
 						{% if can_msg %}
 						<form action="/sendmessage" method="POST">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
