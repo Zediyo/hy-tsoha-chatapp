@@ -19,7 +19,8 @@ CREATE TABLE messages (
     receiver_id INTEGER REFERENCES users(id),
     content TEXT,
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	edit_at TIMESTAMP DEFAULT NULL
+	edit_at TIMESTAMP DEFAULT NULL,
+	deleted BOOLEAN DEFAULT false
 );
 
 INSERT INTO users (username, password) VALUES ('test_admin', 'scrypt:32768:8:1$3FcvJf4J1955oJ5K$df4055162adf8f83e5cc535246902bb57f701a9aabe30b3b1cd5670af28f282fc0777a5f3bb8cc3b20607b831b6f7ce4c367836b0709518e5c64701b9ad39c84');
