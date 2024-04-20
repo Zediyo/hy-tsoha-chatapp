@@ -9,7 +9,7 @@ Features:
 * Users can message their contacts.
 * Users can edit and delete their messages.
 * Conversations are visible only for participants and admins.
-* Users can delete their own account, admins can delete any account.
+* Users can delete their own account, admins can delete any non-admin account.
 
 # how to test on local machine
 
@@ -34,8 +34,4 @@ Features:
 
 # todo
 
-* layout, styling
-* messaging (send, receive, edit)
-* search users
-* admin functions
-* user page access
+* cleanup?
