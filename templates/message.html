@@ -127,6 +127,7 @@
 						{% endif %}
 					</div>
 					<script>
+						var editing = false;
 						//toggle edit message mode on/off
 						function editButtonClick(id, content)
 						{
@@ -206,12 +207,19 @@
 							{
 								if ( data.result == true )
 								{
+									localStorage.setItem("chatInput", document.getElementById("messageinput").value)
 									location.reload();
 								}
 							})
 						}
 
+						//restore input if chat is updated + auto focus on chat box
+						document.getElementById("messageinput").value = localStorage.getItem("chatInput")
+						localStorage.removeItem("chatInput")
+						document.getElementById("messageinput").focus()
+
 						setInterval(checkForUpdates, 2500);
+
 					</script>
 				</div>
 			</div>
