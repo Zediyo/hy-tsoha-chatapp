@@ -1,4 +1,3 @@
-import datetime
 from app import app
 from flask import abort, jsonify, redirect, render_template, request, session
 import db.queries as q
