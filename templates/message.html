@@ -70,9 +70,6 @@
 										oninput="checkEdit(this, event)"
 										onfocus="checkEdit(this, event)"
 									>{{ msg.content }}</span>
-
-										<!-- <button type="submit" class="btn btn-warning">Send</button> -->
-									<!-- </div> -->
 								</form>
 								{% endif %}
 								
@@ -86,7 +83,7 @@
 							</div>
 
 							{% else %}
-							<!-- messages by other user -->
+							<!-- message by other user -->
 							<div class="message-container other-msg-container">
 								<div class="badge t-start bgc-other ctext">{{ msg.content }}</div>
 								{% if msg.edit_at %}
@@ -130,6 +127,7 @@
 						{% endif %}
 					</div>
 					<script>
+						//toggle edit message mode on/off
 						function editButtonClick(id, content)
 						{
 							var editform = document.getElementById("editform"+id);
@@ -152,6 +150,7 @@
 							}
 						}
 
+						//editbox character limits + update charcount display
 						function checkEdit(form, e)
 						{
 							let cur = form.textContent.length;
@@ -171,6 +170,7 @@
 							return true
 						}
 
+						//char count update for chat bottom input
 						function updateInputCount(input)
 						{
 							var cur = input.value.length;
@@ -179,6 +179,7 @@
 							count.textContent = cur + '/' + max;
 						}
 
+						//check edited chat message on submit
 						function checkEditSubmit(id, old_content)
 						{
 							let new_content = document.getElementById("editbox"+id).textContent;

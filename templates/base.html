@@ -12,13 +12,9 @@
 		{% include "navbar.html" %}
 
 		{% block content %}{% endblock %}
-
-		<!-- <footer>
-			<hr>
-			<p>Potato</p>
-		</footer> -->
 	</div>
 	<script>
+		//confirmation popup
 		function confirmSubmit(msg, event)
 		{
 			let conf = confirm("Are you sure you want to " + msg + "?")
@@ -31,6 +27,7 @@
 			return true;
 		}
 
+		//stop search button click if no text entered
 		function checkSearchInput()
 		{
 			let search = document.getElementById("searchbar").value
