@@ -7,4 +7,7 @@ app.secret_key = getenv("SECRET_KEY")
 app.config["SQLALCHEMY_DATABASE_URI"] = getenv("DATABASE_URL")
 csrf.init_app(app)
 
-import routes
+import routes.routes
+import routes.messaging
+import routes.account
+import routes.user
