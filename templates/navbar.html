@@ -10,6 +10,24 @@
 				{% endif %}
 			</div>
 
+			{% if request.path != "/" %}
+			<div style="display: flex; flex-grow: 100;">
+				<form action="/users" method="GET" class="d-flex" role="search" 
+				style="width: 250px;"
+				onsubmit="return checkSearchInput()"
+				>
+					<div class="input-group">
+						<input class="form-control search" name="search"
+						type="search" placeholder="Search for users"
+						aria-label="Search" id="searchbar"
+						style="height: 2rem;"
+						>
+						<button class="btn btn-sm btn-outline-secondary co bco bgcdg" type="submit">Search</button>
+					</div>
+				</form>
+			</div>
+			{% endif %}
+
 			{% if session.user %}
 			<div class="d-flex">
 				<div class="badge text-wrap fw-light co" style="background-color: inherit; margin-right: 1rem;">

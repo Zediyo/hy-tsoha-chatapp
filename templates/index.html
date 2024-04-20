@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container-sm bgclg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;">
-	<p style="color: green;">Main Page</p>
+<!-- <div class="container-sm bgcdg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem;"> -->
+<div class="container-sm bgcg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem; max-width: 20rem;">
+	<h6 style="color:white; text-align: center; width: 250px;">Front Page</h6>
+	<form action="/users" method="GET" class="d-flex" role="search" 
+		style="width: 250px; padding-top: 10rem;"
+		onsubmit="return checkSearchInput()"
+	>
+		<div class="input-group">
+			<input class="form-control search" name="search"
+				type="search" placeholder="Search for users"
+				aria-label="Search" id="searchbar"
+			>
+			<button class="btn btn-outline-secondary co bco bgcdg" type="submit">Search</button>
+		</div>
+	</form>
 </div>
 
 {% endblock %}
