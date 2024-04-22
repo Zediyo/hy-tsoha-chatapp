@@ -32,6 +32,8 @@ Features:
 
     `flask run`
 
+   login with: `test_admin - password` or `test_user - password`
+
 # todo
 
 * cleanup?
