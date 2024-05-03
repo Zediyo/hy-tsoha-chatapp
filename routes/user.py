@@ -56,7 +56,11 @@ def friendrequest():
 	if "user" not in session:
 		return redirect("/")
 
-	target_id = int(request.form["target_id"])
+	target_id = None
+	try:
+		target_id = int(request.form["target_id"])
+	except:
+		return redirect("/")
 
 	if session["user"]["id"] == target_id:
 		return redirect("/")
@@ -75,9 +79,15 @@ def friendrequest():
 def cancelrequest():
 	if "user" not in session:
 		return redirect("/")
+	
+	sender_id = None
+	target_id = None
 
-	sender_id = int(request.form["sender_id"])
-	target_id = int(request.form["target_id"])
+	try:
+		sender_id = int(request.form["sender_id"])
+		target_id = int(request.form["target_id"])
+	except:	
+		return redirect("/")
 
 	if session["user"]["id"] != sender_id and session["user"]["id"] != target_id:
 		return redirect("/")
@@ -90,9 +100,15 @@ def cancelrequest():
 def acceptrequest():
 	if "user" not in session:
 		return redirect("/")
+	
+	user_id = None
+	target_id = None
 
-	user_id = int(request.form["user_id"])
-	target_id = int(request.form["target_id"])
+	try:
+		user_id = int(request.form["user_id"])
+		target_id = int(request.form["target_id"])
+	except:
+		return redirect("/")
 
 	if session["user"]["id"] != user_id:
 		return redirect("/")
@@ -106,9 +122,15 @@ def acceptrequest():
 def deletefriend():
 	if "user" not in session:
 		return redirect("/")
+	
+	user_id = None
+	target_id = None
 
-	user_id = int(request.form["user_id"])
-	target_id = int(request.form["target_id"])
+	try:
+		user_id = int(request.form["user_id"])
+		target_id = int(request.form["target_id"])
+	except:
+		return redirect("/")
 
 	if session["user"]["id"] != user_id:
 		return redirect("/")

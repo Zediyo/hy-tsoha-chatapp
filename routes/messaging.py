@@ -63,7 +63,12 @@ def check_new_messages():
 
 @app.route("/sendmessage", methods=["POST"])
 def send_message():
-	sender_id = int(request.form["sender_id"])
+	sender_id = None
+
+	try:
+		sender_id = int(request.form["sender_id"])
+	except:
+		return redirect(request.referrer)
 
 	#sender not in session
 	if not session["user"] or session["user"]["id"] != sender_id:
@@ -88,7 +93,12 @@ def send_message():
 @app.route("/editmessage", methods=["POST"])
 def edit_message():
 	msg_id = request.form["msg_id"]
-	sender_id = int(request.form["sender_id"])
+	sender_id = None
+
+	try:
+		sender_id = int(request.form["sender_id"])
+	except:
+		return redirect(request.referrer)
 
 	#original sender not in session
 	if not session["user"] or session["user"]["id"] != sender_id:
@@ -107,7 +117,12 @@ def edit_message():
 @app.route("/deletemessage", methods=["POST"])
 def delete_message():
 	msg_id = request.form["msg_id"]
-	sender_id = int(request.form["sender_id"])
+	sender_id = None
+
+	try:
+		sender_id = int(request.form["sender_id"])
+	except:
+		return redirect(request.referrer)
 
 	#original sender not in session
 	if not session["user"] or session["user"]["id"] != sender_id:

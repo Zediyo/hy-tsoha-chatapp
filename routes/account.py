@@ -90,7 +90,11 @@ def logout():
 
 @app.route("/deleteuseraccount", methods=["POST"])
 def delete_user_account():
-	user_id = int(request.form["user_id"])
+	user_id = None
+	try:
+		user_id = int(request.form["user_id"])
+	except:
+		return redirect(request.referrer)
 
 	#not in session
 	if not session["user"]:
