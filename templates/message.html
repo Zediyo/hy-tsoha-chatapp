@@ -104,7 +104,7 @@
 
 					<div class="card-footer bgcdg" style="border-radius: 1rem;">
 						{% if can_msg %}
-						<form action="/sendmessage" method="POST">
+						<form action="/sendmessage" method="POST" onsubmit="sendMessage(event, this)">
 							<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 							<input type="hidden" name="sender_id" value="{{ user_id }}"/>
 							<input type="hidden" name="target_id" value="{{ other_id }}"/>
@@ -204,6 +204,26 @@
 							document.getElementById("content"+id).value = document.getElementById("editbox"+id).textContent;
 						}
 
+						//send post request and refresh to prevent navigation history issues
+						function sendMessage(event, form)
+						{
+							event.preventDefault();
+
+							if ( document.getElementById("messageinput").value.length == 0 )
+								return;
+							
+							let formData = new FormData(form);
+							
+							fetch("/sendmessage", {
+								method: "POST",
+								body: formData
+							})
+							.then(() => 
+							{
+								location.reload();
+							})
+						}
+
 						// potato polling solution for chat updates, but good enough for this.
 						var lastCheck = "{{ last_check }}";
 						var user_id = "{{ user_id }}"
@@ -235,12 +255,15 @@
 						}
 
 						//restore input if chat is updated + auto focus on chat box
-						document.getElementById("messageinput").value = localStorage.getItem("chatInput")
+						if ( document.getElementById("messageinput") )
+						{
+							document.getElementById("messageinput").value = localStorage.getItem("chatInput")
+							document.getElementById("messageinput").focus()
+						}
+					
 						localStorage.removeItem("chatInput")
-						document.getElementById("messageinput").focus()
 
 						setInterval(checkForUpdates, 2500);
-
 					</script>
 				</div>
 			</div>
