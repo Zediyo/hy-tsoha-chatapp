@@ -67,7 +67,10 @@ def check_new_messages(user_id, target_id, timestamp):
 def get_last_message_timestamp(user_id, target_id):
 	query = text("""
 		SELECT
-			EXTRACT(EPOCH FROM MAX(GREATEST(sent_at, edit_at))) timestamp
+			COALESCE(
+				EXTRACT(EPOCH FROM MAX(GREATEST(sent_at, edit_at))),
+			  	0
+			) timestamp
 		FROM
 			messages
 		WHERE
