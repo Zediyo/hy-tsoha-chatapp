@@ -212,7 +212,13 @@
 						function checkForUpdates()
 						{
 							fetch(`/checknewmessages?user_id=${user_id}&target_id=${target_id}&timestamp=${lastCheck}`)
-							.then(res => res.json())
+							.then(res => 
+							{
+								if ( !res.ok )
+									throw new Error("fetch error")
+								
+								return res.json()
+							})
 							.then(data => 
 							{
 								//refresh on new data only if user is not currently editing a message
@@ -221,6 +227,10 @@
 									localStorage.setItem("chatInput", document.getElementById("messageinput").value)
 									location.reload();
 								}
+							})
+							.catch(error => 
+							{
+								console.log(error)
 							})
 						}
 
