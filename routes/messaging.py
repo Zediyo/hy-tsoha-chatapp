@@ -38,6 +38,14 @@ def check_new_messages():
 	#missing args
 	if not user_id or not target_id or not timestamp:
 		return abort(403)
+	
+	#invalid args
+	try:
+		user_id = int(user_id)
+		target_id = int(target_id)
+		timestamp = float(timestamp)
+	except:
+		return abort(403)
 
 	if not session["user"]:
 		return abort(403)
