@@ -19,7 +19,7 @@ def get_recently_messaged_with(id):
 					ROW_NUMBER() OVER(PARTITION BY LEAST(sender_id, receiver_id), GREATEST(sender_id, receiver_id) ORDER BY a.id DESC) rn
 				FROM messages a
 				LEFT JOIN users b ON a.sender_id = b.id
-			  	WHERE sender_id = :id OR receiver_id = :id
+			  	WHERE deleted = false AND ( sender_id = :id OR receiver_id = :id )
 			) a
 			LEFT JOIN users b ON a.other_id = b.id
 			WHERE rn = 1
