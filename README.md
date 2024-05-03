@@ -31,7 +31,3 @@ Features:
     ~~`psql < schema.sql`~~
 
     `flask run`
-
-# todo
-
-* cleanup?
