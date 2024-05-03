@@ -41,7 +41,8 @@
 			})
 			.then(data =>
 			{
-				document.getElementById("loginError").textContent = data.error;
+				if ( data )
+					document.getElementById("loginError").textContent = data.error;
 			})
 			.catch(error =>
 			{

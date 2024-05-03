@@ -70,7 +70,8 @@
 		})
 		.then(data =>
 		{
-			document.getElementById("registerError").textContent = data.error;
+			if ( data )
+				document.getElementById("registerError").textContent = data.error;
 		})
 		.catch(error =>
 		{
