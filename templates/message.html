@@ -13,8 +13,14 @@
 				<div class="card bco bgcdg" style="max-height: 80vh;">
 
 					<div class="card-header bgcdg" style="border-radius: 1rem;">
-						<div class="co">Chat with {{ target_username }}</div>
-						
+						<div class="co" style="display: flex; justify-content: space-between;">
+							<span>Chat with {{ target_username }}</span>
+							<button type="button" style="height: 1.5rem; font-size: 0.7rem;"
+								onclick="goBackButtonPress()"
+								class="btn btn-sm btn-secondary co bco bgcdg">
+								Go Back
+							</button>
+						</div>
 					</div>
 		
 					<div class="card-body chat-container bgcg">
@@ -224,6 +230,12 @@
 							})
 						}
 
+						function goBackButtonPress()
+						{
+							let backPage = localStorage.getItem("prevPage")
+							window.location.href = backPage ? backPage : "/"
+						}
+
 						// potato polling solution for chat updates, but good enough for this.
 						var lastCheck = "{{ last_check }}";
 						var user_id = "{{ user_id }}"
@@ -264,6 +276,11 @@
 						localStorage.removeItem("chatInput")
 
 						setInterval(checkForUpdates, 2500);
+
+						if ( document.referrer.length > 0 && !document.referrer.includes("/message/") )
+							localStorage.setItem("prevPage", document.referrer)
+
+						console.log(document.referrer)
 					</script>
 				</div>
 			</div>
