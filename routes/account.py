@@ -1,5 +1,5 @@
 from app import app
-from flask import redirect, render_template, request, session
+from flask import jsonify, redirect, render_template, request, session
 import db.queries as q
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -23,26 +23,34 @@ def register():
 		password1 = request.form["password1"]
 		password2 = request.form["password2"]
 
+		print(username, password1)
+
 		if len(username) < 2 or len(username) > 32:
+			return jsonify({"error": "Username has to be between 2 and 32 characters long."}), 400
 			return render_template("register.html", errmsg="Username has to be between 2 and 32 characters long.")
 
 		if username.isalnum() == False:
+			return jsonify({"error": "Username can only contain numbers or letters."}), 400
 			return render_template("register.html", errmsg="Username can only contain numbers or letters.")
 		
 		if len(password1) < 6 or len(password1) > 32:
+			return jsonify({"error": "Password length has to be between 6 and 32."}), 400
 			return render_template("register.html", errmsg="Password length has to be between 6 and 32.")
 		
 		if password1 != password2:
+			return jsonify({"error": "Passwords do not match."}), 400
 			return render_template("register.html", errmsg="Passwords do not match.")
 		
 		user = q.get_user(username)
 
 		if user:
+			return jsonify({"error": "Username is already taken."}), 400
 			return render_template("register.html", errmsg="Username is already taken.")
 
 		hash = generate_password_hash(password1)
 
 		if q.add_new_user(username, hash) == False:
+			return jsonify({"error": "Unknown error."}), 400
 			return render_template("register.html", errmsg="Unknown error.")
 
 		user = q.get_user(username)
@@ -67,10 +75,10 @@ def login():
 		user = q.get_user(username)
 
 		if not user:
-			return render_template("login.html", errmsg="User does not exist.")
+			return jsonify({"error": "User does not exist."}), 400
             
 		if check_password_hash(user.password, password) == False:
-			return render_template("login.html", errmsg="Invalid password.")
+			return jsonify({"error": "Invalid password."}), 400
         
 		create_user_data(user.id, username)
 
