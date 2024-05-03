@@ -31,3 +31,5 @@ Features:
     ~~`psql < schema.sql`~~
 
     `flask run`
+
+   login with: `test_admin - password` or `test_user - password`
