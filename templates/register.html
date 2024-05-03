@@ -2,8 +2,8 @@
 {% block content %}
 
 <div class="container-sm bgcg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem; max-width: 20rem;">
-	<p style="color: red;">{{ errmsg }}</p>
-	<form action="/register" method="POST" onsubmit="return check(this)">
+	<p style="color: red;" id="registerError">{{ errmsg }}</p>
+	<form action="/register" method="POST" onsubmit="check(event, this)">
 		<label for="un" class="form-label co">Username:</label>
 		<input type="text" name="username" id="un" class="form-control bco mb-3" required></input>
 		<label for="pw1" class="form-label co">Password:</label>
@@ -17,33 +17,65 @@
 
 <script>
 	//same checks for client as on server
-	function check(form)
+	function check(event, form)
 	{
+		event.preventDefault();
+
+		let errorBox = document.getElementById("registerError")
+
 		if ( form.username.value.length < 2 || form.username.value.length > 32 )
 		{
-			alert("Username has to be between 2 and 32 characters long.");
-			return false;
+			errorBox.textContent = "Username has to be between 2 and 32 characters long.";
+			return;
 		}
 
 		if ( !form.username.value.match(/^[0-9a-z]+$/) )
 		{
-			alert("Username can only contain numbers or letters.");
-			return false;
+			errorBox.textContent = "Username can only contain numbers or letters.";
+			return;
 		}
 
 		if ( form.password1.value.length < 6 || form.password1.value.length > 32 )
 		{
-			alert("Password length has to be between 6 and 32.");
-			return false;
+			errorBox.textContent = "Password length has to be between 6 and 32.";
+			return;
 		}
 
 		if ( form.password1.value != form.password2.value )
 		{
-			alert("Passwords do not match.");
-			return false;
+			errorBox.textContent = "Passwords do not match.";
+			return;
 		}
 
-		return true;
+		let formData = new FormData(form);
+
+		fetch("/register", {
+			method: "POST",
+			body: formData
+		})
+		.then(res => 
+		{
+			if ( res.redirected )
+			{
+				window.location.href = res.url
+			}
+			else if ( res.status == 400 )
+			{
+				return res.json();
+			}
+			else
+			{
+				throw new Error("Unknown error.");
+			}
+		})
+		.then(data =>
+		{
+			document.getElementById("registerError").textContent = data.error;
+		})
+		.catch(error =>
+		{
+			console.error(error);
+		});
 	}
 </script>
 

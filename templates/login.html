@@ -2,8 +2,9 @@
 {% block content %}
 
 <div class="container-sm bgcg" style="margin-top: 1rem; padding-top: 0.5rem; padding-bottom: 0.2rem; max-width: 20rem;">
-	<p style="color: red;">{{ errmsg }}</p>
-	<form action="/login" method="POST">
+	<p style="color: red;" id="loginError">{{ errmsg }}</p>
+
+	<form action="/login" method="POST" onsubmit="checkLogin(event, this)">
 		<label for="un" class="form-label co">Username:</label>
 		<input type="text" name="username" id="un" class="form-control bco mb-3" required></input>
 		<label for="pw" class="form-label co">Password:</label>
@@ -11,6 +12,43 @@
 		<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
 		<button type="submit" class="btn btn-light co bco bgcdg mb-3">Login</button>
 	</form>
+
+	<script>
+		function checkLogin(event, form)
+		{
+			event.preventDefault();
+			
+			let formData = new FormData(form);
+			
+			fetch("/login", {
+				method: "POST",
+				body: formData
+			})
+			.then(res => 
+			{
+				if ( res.redirected )
+				{
+					window.location.href = res.url
+				}
+				else if ( res.status == 400 )
+				{
+					return res.json();
+				}
+				else
+				{
+					throw new Error("Unknown error.");
+				}
+			})
+			.then(data =>
+			{
+				document.getElementById("loginError").textContent = data.error;
+			})
+			.catch(error =>
+			{
+				console.error(error);
+			});
+		}
+	</script>
 </div>
 
 {% endblock %}
